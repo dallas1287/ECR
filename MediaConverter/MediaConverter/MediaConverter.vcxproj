@@ -85,12 +85,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>MediaConverter</TargetName>
-    <OutDir>$(SolutionDir)\..\bin\</OutDir>
+    <OutDir>$(SolutionDir)..\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>MediaConverter</TargetName>
-    <OutDir>$(SolutionDir)\..\bin\</OutDir>
+    <OutDir>$(SolutionDir)..\bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -149,6 +149,9 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy $(Outdir)MediaConverter.dll $(SolutionDir)$(Platform)\$(Configuration)  /y  /d</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -177,6 +180,9 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy $(Outdir)MediaConverter.dll $(SolutionDir)$(Platform)\$(Configuration)  /y  /d</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
