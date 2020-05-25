@@ -1,0 +1,15 @@
+
+*.user
+*/.vs/*
+*.db-shm
+*.opendb
+*.db-wal
+*.ipch
+x64/
+*/bin/*
+bin/*
+*.tlog
+*.obj
+EeveeRender1.mp4
+MediaConverter/include/*
+MediaConverter/lib/*
