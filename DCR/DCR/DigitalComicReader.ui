@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1103</width>
-    <height>901</height>
+    <height>903</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -464,20 +464,7 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <layout class="QHBoxLayout" name="gpLayout">
-      <property name="spacing">
-       <number>1</number>
-      </property>
-      <property name="sizeConstraint">
-       <enum>QLayout::SetNoConstraint</enum>
-      </property>
-     </layout>
-    </item>
-   </layout>
-  </widget>
+  <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -495,8 +482,48 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionDrawRect"/>
+   <addaction name="actionDrawLines"/>
+   <addaction name="actionDrawCircle"/>
+   <addaction name="actionDrawEllipse"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionDrawLines">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../icons/line.png</normaloff>../../icons/line.png</iconset>
+   </property>
+   <property name="text">
+    <string>DrawLines</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;point to point polygon drawing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionDrawRect">
+   <property name="text">
+    <string>DrawRect</string>
+   </property>
+   <property name="toolTip">
+    <string>draw Rectangles</string>
+   </property>
+  </action>
+  <action name="actionDrawCircle">
+   <property name="text">
+    <string>DrawCircle</string>
+   </property>
+   <property name="toolTip">
+    <string>draw circles</string>
+   </property>
+  </action>
+  <action name="actionDrawEllipse">
+   <property name="text">
+    <string>DrawEllipse</string>
+   </property>
+   <property name="toolTip">
+    <string>draw ellipse</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

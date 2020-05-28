@@ -2,38 +2,27 @@
 #include <QPainter>
 #include "MediaConverter.h"
 
-GraphicPanelBase::GraphicPanelBase(QWidget* parent, Qt::WindowFlags flags): m_parent(parent)
-{
-}
 
-GraphicPanelBase::~GraphicPanelBase()
-{
-
-}
-
-void GraphicPanelBase::initializeGL()
-{
-
-}
-
-void GraphicPanelBase::paintGL()
-{
-	panelPaint();
-}
-
-void GraphicPanelBase::resizeGL(int w, int h)
-{
-	glViewport(0, 0, w, h);
-}
-
-GraphicPanel::GraphicPanel(QWidget* parent, Qt::WindowFlags flags) : GraphicPanelBase(parent, flags)
+GraphicPanel::GraphicPanel(QWidget* parent, Qt::WindowFlags flags)
 {
 	setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 	setFocus(Qt::FocusReason::OtherFocusReason);
 }
 
+GraphicPanel::GraphicPanel(const GraphicPanel& other): GraphicPanel(other.m_parent, other.windowFlags())
+{
+	m_gObj.reset(other.m_gObj.get());
+}
+
 GraphicPanel::~GraphicPanel()
 {
+}
+
+GraphicPanel& GraphicPanel::operator=(const GraphicPanel& other)
+{
+	m_parent = other.m_parent;
+	m_gObj.reset(other.m_gObj.get());
+	return *this;
 }
 
 void GraphicPanel::initializeGL()
@@ -52,13 +41,27 @@ void GraphicPanel::initializeGL()
 
 	bool failed = false;
 	if (ret != ErrorCode::SUCCESS || width == 0 || height == 0)
+	{
+		if (data)
+			delete[] data;
 		return;
+	}
 
 	if (!m_gObj->resetTexture(width, height, (void*)data))
 		qDebug() << "Texture data not set";
 
 	delete[] data;
 }
+void GraphicPanel::paintGL()
+{
+	panelPaint();
+}
+
+void GraphicPanel::resizeGL(int w, int h)
+{
+	glViewport(0, 0, w, h);
+}
+
 
 void GraphicPanel::panelPaint()
 {

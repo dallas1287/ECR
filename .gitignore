@@ -13,3 +13,4 @@ bin/*
 EeveeRender1.mp4
 MediaConverter/include/*
 MediaConverter/lib/*
+DCR/DCR/DCR.vcxproj.filters
