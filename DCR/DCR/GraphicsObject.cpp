@@ -83,6 +83,9 @@ void GraphicsObject::initTexture(const QString& path)
 
 bool GraphicsObject::resetTexture(const int& width, const int& height, void* data)
 {
+	if (width <= 0 || height <= 0 || !data)
+		return false;
+
 	m_texture.reset(new QOpenGLTexture(QOpenGLTexture::Target2D));
 
 	m_texture->setSize(width, height);

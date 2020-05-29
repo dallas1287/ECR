@@ -1,5 +1,5 @@
 #include "DigitalComicReader.h"
-#include <QPainter>
+#include "common.h"
 
 DigitalComicReader::DigitalComicReader(QWidget *parent)
     : QMainWindow(parent)
@@ -14,7 +14,9 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
         delete oldlayout;
     ui.centralWidget->setLayout(m_layout.get());
 
-    connect(ui.mainToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::HandleToolBarAction);
+    connect(ui.mainToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
+    connect(this, &DigitalComicReader::signalPanelObjectCreation, &m_cpHandler, &ComicPanelHandler::createPanelObject);
+    connect(this, &DigitalComicReader::signalGraphciPanelCreation, &m_cpHandler, &ComicPanelHandler::createGraphicPanel);
 }
 
 DigitalComicReader::~DigitalComicReader()
@@ -32,44 +34,29 @@ void DigitalComicReader::paintEvent(QPaintEvent* event)
     QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
 
     //draw selected
-    if (m_selected)
+    auto selected = m_cpHandler.getSelected();
+    if (selected)
     {
-        m_selected->getRect();
         pen.setColor(QColor(255, 255, 0));
         pen.setWidth(10);
         painter.setPen(pen);
-        painter.fillRect(m_selected->getRect(), brush);
-        painter.drawRect(m_selected->getRect());
+        painter.fillRect(selected->getRect(), brush);
+        painter.drawRect(selected->getRect());
     }
 
-    pen.setColor(QColor(0, 0, 0));
+    pen.setColor(QColor(255, 0, 0));
     pen.setWidth(5);
     painter.setPen(pen);
 
-    QRect rect(getDrawnRect());
+    QRect rect(mapRectFromGlobal(this, getDrawnRect()));
 
     painter.fillRect(rect, brush);
     painter.drawRect(rect);
 }
 
-void DigitalComicReader::createPanel(PanelObject* pObj)
+void DigitalComicReader::addPanelWidget(PanelObject* pObj)
 {
-    pObj->createGraphicPanel();
     ui.centralWidget->layout()->addWidget(pObj->getGraphicPanel());
-}
-
-PanelObject* DigitalComicReader::createPanelObject(const QRect& size)
-{
-    m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(this, size)));
-    return m_panelObjects.back().get();
-}
-
-PanelObject* DigitalComicReader::getEnclosingShape(const QPoint& cursor)
-{
-    auto iter = std::find_if(m_panelObjects.begin(), m_panelObjects.end(), [&](std::unique_ptr<PanelObject>& p) { return p->getRect().contains(cursor); });
-    if (iter != m_panelObjects.end())
-        return (*iter).get();
-    return nullptr;
 }
 
 QRect DigitalComicReader::getDrawnRect(const QPoint& start, const QPoint& cur) const
@@ -110,25 +97,6 @@ QRect DigitalComicReader::getDrawnRect() const
     return getDrawnRect(m_rectStart, m_curPos);
 }
 
-void DigitalComicReader::SetSelected(PanelObject* selected)
-{
-    for (std::unique_ptr<PanelObject>& p : m_panelObjects)
-    {
-        if (!p.get())
-            continue;
-
-        if (p.get() != selected)
-        {
-            p->setSelected(false);
-        }
-        else
-        {
-            p->setSelected();
-        }
-    }
-    m_selected = selected;
-}
-
 /**************************************************************************************************
 **************************Mouse Events*************************************************************
 **************************************************************************************************/
@@ -138,7 +106,7 @@ void DigitalComicReader::mouseMoveEvent(QMouseEvent* event)
     if (!m_drawMode || !m_shapeStarted)
         return;
 
-    m_curPos = event->pos();
+    m_curPos = event->globalPos();
     repaint();
 }
 
@@ -147,8 +115,9 @@ void DigitalComicReader::mousePressEvent(QMouseEvent* event)
     if (!m_drawMode)
         return;
     m_shapeStarted = true;
-    m_rectStart = event->pos();
+    m_rectStart = event->globalPos();
     m_curPos = QPoint(m_rectStart.x() + 10, m_rectStart.y() + 10); //assure a base shape of 10 pixels 
+    m_cpHandler.setSelected(nullptr);
     repaint();
 }
 
@@ -157,19 +126,19 @@ void DigitalComicReader::mouseReleaseEvent(QMouseEvent* event)
     if (!m_drawMode)
         return;
     m_shapeStarted = false;
-    m_rectEnd = event->pos();
-    createPanel(createPanelObject(getDrawnRect()));
-    repaint();
+    m_rectEnd = event->globalPos();
+    emit signalPanelObjectCreation(getDrawnRect(m_rectEnd));
 }
 
 void DigitalComicReader::mouseDoubleClickEvent(QMouseEvent* event)
 {
-    auto panelObj = getEnclosingShape(event->pos());
+    auto panelObj = m_cpHandler.getEnclosingShape(event->globalPos());
     if (!panelObj)
         return;
 
-    SetSelected(panelObj);
-    //panelObj->createGraphicPanel();
+    m_cpHandler.setSelected(panelObj);
+     emit signalGraphciPanelCreation(panelObj);
+    repaint();
 }
 
 /**************************************************************************************************
@@ -186,9 +155,12 @@ void DigitalComicReader::keyPressEvent(QKeyEvent* event)
 **************************Toolbar Events***********************************************************
 **************************************************************************************************/
 
-void DigitalComicReader::HandleToolBarAction(QAction* action)
+void DigitalComicReader::handleToolBarAction(QAction* action)
 {
-    qDebug() << "handled toolbar action";
-    if (action)
-        qDebug() << " got action: " << action->text();
+    if (!action)
+        return;
+
+    m_drawHandler.setMode(action->text());
+
+    //TODO: handle icon enabled/disabled settings
 }
