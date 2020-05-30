@@ -14,7 +14,7 @@ class GraphicPanel : public QOpenGLWidget, protected QOpenGLExtraFunctions
 {
 	Q_OBJECT
 public:
-	GraphicPanel(PanelObject* controller, QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
+	GraphicPanel(QWidget* parent, PanelObject* controller, Qt::WindowFlags flags = Qt::WindowFlags());
 	GraphicPanel(const GraphicPanel& other);
 	virtual ~GraphicPanel();
 

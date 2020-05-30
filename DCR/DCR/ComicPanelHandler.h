@@ -7,12 +7,13 @@ class ComicPanelHandler : public QObject
 {
 	Q_OBJECT
 public:
-	ComicPanelHandler(QWidget* parent);
+	ComicPanelHandler(QWidget* owner);
 	ComicPanelHandler(const ComicPanelHandler& other);
 	~ComicPanelHandler();
 
 	ComicPanelHandler& operator=(const ComicPanelHandler& other);
 
+	QWidget* getOwner() { return m_owner; }
 	PanelObjectPool& panelObjects() { return m_panelObjects; }
 
 	void setSelected(PanelObject* panelObj);
@@ -25,7 +26,7 @@ public slots:
 
 private:
 
-	QWidget* m_parent = nullptr;
+	QWidget* m_owner = nullptr;
 	PanelObjectPool m_panelObjects;
 	PanelObject* m_selected = nullptr;
 

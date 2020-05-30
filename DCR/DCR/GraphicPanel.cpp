@@ -1,15 +1,17 @@
 #include "GraphicPanel.h"
 #include <QPainter>
 #include "MediaConverter.h"
+#include "PanelObject.h"
+#include "common.h"
 
 
-GraphicPanel::GraphicPanel(PanelObject* controller, QWidget* parent, Qt::WindowFlags flags) : QOpenGLWidget(parent), m_controller(controller)
+GraphicPanel::GraphicPanel(QWidget* parent, PanelObject* controller, Qt::WindowFlags flags) : QOpenGLWidget(parent), m_controller(controller)
 {
 	setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 	setFocus(Qt::FocusReason::OtherFocusReason);
 }
 
-GraphicPanel::GraphicPanel(const GraphicPanel& other): GraphicPanel(other.m_controller, other.parentWidget(), other.windowFlags())
+GraphicPanel::GraphicPanel(const GraphicPanel& other): GraphicPanel(other.parentWidget(), other.m_controller, other.windowFlags())
 {
 	m_gObj.reset(other.m_gObj.get());
 }
@@ -82,10 +84,11 @@ void GraphicPanel::panelPaint()
 	QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
 
 	painter.beginNativePainting();
-	painter.fillRect(geometry(), brush);
-	painter.drawRect(geometry());
-	painter.endNativePainting();
-	painter.end();
 
-	update();
+	QRect geo(QPoint(0,0), QSize(50, 50));
+	painter.fillRect(geo, brush);
+	painter.drawRect(geo);
+	painter.endNativePainting();
+
+	painter.end();
 }

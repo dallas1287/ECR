@@ -14,7 +14,7 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
         delete oldlayout;
     ui.centralWidget->setLayout(m_layout.get());
 
-    connect(ui.mainToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
+    connect(ui.leftToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
     connect(this, &DigitalComicReader::signalPanelObjectCreation, &m_cpHandler, &ComicPanelHandler::createPanelObject);
     connect(this, &DigitalComicReader::signalGraphciPanelCreation, &m_cpHandler, &ComicPanelHandler::createGraphicPanel);
 }
@@ -40,8 +40,8 @@ void DigitalComicReader::paintEvent(QPaintEvent* event)
         pen.setColor(QColor(255, 255, 0));
         pen.setWidth(10);
         painter.setPen(pen);
-        painter.fillRect(selected->getRect(), brush);
-        painter.drawRect(selected->getRect());
+        painter.fillRect(mapRectFromGlobal(this, selected->getRect()), brush);
+        painter.drawRect(mapRectFromGlobal(this, selected->getRect()));
     }
 
     pen.setColor(QColor(255, 0, 0));
@@ -84,7 +84,7 @@ QRect DigitalComicReader::getDrawnRect(const QPoint& start, const QPoint& cur) c
         bottom = start.y();
     }
 
-    return QRect(QPoint(left, top), QPoint(right, bottom));
+    return QRect(QPoint(left, top), QSize(right - left, bottom - top));
 }
 
 QRect DigitalComicReader::getDrawnRect(const QPoint& cur) const
@@ -112,8 +112,9 @@ void DigitalComicReader::mouseMoveEvent(QMouseEvent* event)
 
 void DigitalComicReader::mousePressEvent(QMouseEvent* event)
 {
-    if (!m_drawMode)
+     if (!m_drawMode)
         return;
+
     m_shapeStarted = true;
     m_rectStart = event->globalPos();
     m_curPos = QPoint(m_rectStart.x() + 10, m_rectStart.y() + 10); //assure a base shape of 10 pixels 

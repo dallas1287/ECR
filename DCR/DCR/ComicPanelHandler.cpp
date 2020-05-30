@@ -1,14 +1,14 @@
 #include "ComicPanelHandler.h"
 
-ComicPanelHandler::ComicPanelHandler(QWidget* parent): m_parent(parent)
+ComicPanelHandler::ComicPanelHandler(QWidget* owner): m_owner(owner)
 {
 }
 
-ComicPanelHandler::ComicPanelHandler(const ComicPanelHandler& other): ComicPanelHandler(other.m_parent)
+ComicPanelHandler::ComicPanelHandler(const ComicPanelHandler& other): ComicPanelHandler(other.m_owner)
 {
     //don't love this as a copy, but compiler will complain about unique_ptrs and deleted functions and what not
     for (const auto& p : other.m_panelObjects)
-        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_parent, p->getRect())));
+        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, p->getRect())));
 }
 
 ComicPanelHandler::~ComicPanelHandler()
@@ -17,17 +17,17 @@ ComicPanelHandler::~ComicPanelHandler()
 
 ComicPanelHandler& ComicPanelHandler::operator=(const ComicPanelHandler& other)
 {
-	m_parent = other.m_parent;
+	m_owner = other.m_owner;
     m_panelObjects.clear();
     for (const auto& p : other.m_panelObjects)
-        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_parent, p->getRect())));
+        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, p->getRect())));
 
     return *this;
 }
 
 void ComicPanelHandler::createPanelObject(const QRect& rect)
 {
-    m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_parent, rect)));
+    m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, rect)));
 }
 
 void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj)

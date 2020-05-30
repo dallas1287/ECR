@@ -5,13 +5,14 @@
 class PanelObject
 {
 public:
-	PanelObject(QWidget* parent, const QRect& rect);
+	PanelObject(QWidget* owner, const QRect& rect);
 	PanelObject(const PanelObject& other);
 
 	~PanelObject();
 
 	PanelObject& operator=(const PanelObject& other);
 
+	QWidget* getOwner() { return m_owner; }
 	const QRect& getRect() { return m_rect; }
 	GraphicPanel* getGraphicPanel() { return m_gPanel.get(); }
 
@@ -23,7 +24,7 @@ public:
 	void setSelected(bool state = true) { m_isSelected = state; }
 
 private:
-	QWidget* m_parent;
+	QWidget* m_owner;
 	QRect m_rect;
 	std::unique_ptr<GraphicPanel> m_gPanel;
 	int m_index = -1;
