@@ -19,11 +19,16 @@ public:
 public slots:
 	void handleToolBarAction(QAction* action);
 
+protected:
+	virtual void keyPressEvent(QKeyEvent* event) override;
+
 private:
+	void handleTopToolBarAction(TopToolBar selection);
+	void handleLeftToolBarAction(LeftToolBar selection);
+
     Ui::DigitalComicReaderClass ui;
 
 	std::unique_ptr<ComicPageWidget> m_pageWidget;
 
-	DrawHandler m_drawHandler;
 	ComicPanelHandler m_cpHandler = ComicPanelHandler(this);
 };

@@ -127,6 +127,7 @@
     <QtMoc Include="GraphicPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ToolbarMaps.h" />
     <QtMoc Include="ComicPanelHandler.h" />
     <QtMoc Include="ComicPageWidget.h" />
     <ClInclude Include="ComicPanelLayout.h" />

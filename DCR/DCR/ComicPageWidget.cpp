@@ -28,36 +28,31 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
 
-    QPen pen;
-    pen.setStyle(Qt::PenStyle::SolidLine);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    //QPen pen;
+    //pen.setStyle(Qt::PenStyle::SolidLine);
+    //painter.setRenderHint(QPainter::Antialiasing, true);
 
-    QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
+    //QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
 
-    //draw selected
-    auto selected = m_cpHandler.getSelected();
-    if (selected)
-    {
-        pen.setColor(QColor(255, 255, 0));
-        pen.setWidth(10);
-        painter.setPen(pen);
-        painter.fillRect(selected->getRect(), brush);
-        painter.drawRect(selected->getRect());
-    }
+    ////draw selected
+    //auto selected = m_cpHandler.getSelected();
+    //if (selected)
+    //{
+    //    pen.setColor(QColor(255, 255, 0));
+    //    pen.setWidth(10);
+    //    painter.setPen(pen);
+    //    painter.fillRect(selected->getRect(), brush);
+    //    painter.drawRect(selected->getRect());
+    //}
 
-    pen.setColor(QColor(0, 0, 0));
-    pen.setWidth(3);
-    painter.setPen(pen);
-    QRect r(QPoint(0, 0), size());
-    painter.fillRect(r, brush);
-    painter.drawRect(r);
+    //pen.setColor(QColor(0, 0, 0));
+    //pen.setWidth(3);
+    //painter.setPen(pen);
+    //QRect r(QPoint(0, 0), size());
+    //painter.fillRect(r, brush);
+    //painter.drawRect(r);
 
-    pen.setColor(QColor(255, 0, 0));
-    pen.setWidth(5);
-    painter.setPen(pen);
-    QRect rect(getDrawnRect());
-    painter.fillRect(rect, brush);
-    painter.drawRect(rect);
+    m_drawHandler.draw(painter, getDrawnRect());
 }
 
 QRect ComicPageWidget::getDrawnRect(const QPoint& start, const QPoint& cur) const
@@ -134,8 +129,17 @@ void ComicPageWidget::mousePressEvent(QMouseEvent* event)
         return;
 
     m_shapeStarted = true;
-    m_rectStart = event->pos();
-    m_curPos = QPoint(m_rectStart.x() + 10, m_rectStart.y() + 10); //assure a base shape of 10 pixels 
+
+    if (getDrawMode() == LeftToolBar::Polygon)
+    {
+        m_drawHandler.addPoint(event->pos());
+    }
+    else
+    {
+        m_rectStart = event->pos();
+        m_curPos = QPoint(m_rectStart.x() + 10, m_rectStart.y() + 10); //assure a base shape of 10 pixels
+    }
+
     m_cpHandler.setSelected(nullptr);
     repaint();
 }
@@ -158,14 +162,4 @@ void ComicPageWidget::mouseDoubleClickEvent(QMouseEvent* event)
     m_cpHandler.setSelected(panelObj);
     emit signalGraphicPanelCreation(panelObj);
     repaint();
-}
-
-/**************************************************************************************************
-**************************Keyboard Events**********************************************************
-**************************************************************************************************/
-
-void ComicPageWidget::keyPressEvent(QKeyEvent* event)
-{
-    if (event->key() == Qt::Key_Space)
-        m_drawing ^= true; //toggle drawMode
 }

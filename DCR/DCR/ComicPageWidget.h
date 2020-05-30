@@ -3,6 +3,7 @@
 #include "ComicPanelLayout.h"
 #include "ComicPanelHandler.h"
 #include "PanelObject.h"
+#include "DrawHandler.h"
 
 class ComicPageWidget : public QWidget
 {
@@ -13,6 +14,9 @@ public:
 	virtual ~ComicPageWidget();
 
 	bool isDrawing() { return m_drawing; }
+	void setDrawing(bool state) { m_drawing = state; }
+	LeftToolBar getDrawMode() { return m_drawHandler.getMode(); }
+	void setDrawMode(LeftToolBar selection) { if (selection >= LeftToolBar::Polygon && selection <= LeftToolBar::Ellipse) m_drawHandler.setMode(selection); }
 	void addPanelWidget(PanelObject* panelObj);
 
 signals:
@@ -26,7 +30,6 @@ protected:
 	virtual void mousePressEvent(QMouseEvent* event) override;
 	virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
 	virtual void mouseReleaseEvent(QMouseEvent* event) override;
-	virtual void keyPressEvent(QKeyEvent* event) override;
 
 private:
 	QRect getDrawnRect(const QPoint& start, const QPoint& cur) const;
@@ -35,6 +38,7 @@ private:
 
 	ComicPanelLayout m_layout;
 	ComicPanelHandler m_cpHandler = ComicPanelHandler(this);
+	DrawHandler m_drawHandler;
 
 	bool m_drawing = false;
 	bool m_shapeStarted = false;

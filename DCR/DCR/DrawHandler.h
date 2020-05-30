@@ -1,21 +1,6 @@
 #pragma once
 #include <QPainter>
-
-enum class DrawMode
-{
-	Line,
-	Rectangle,
-	Circle,
-	Ellipse
-};
-
-const std::map<QString, DrawMode> drawModeMap =
-{
-	{"DrawLines", DrawMode::Line },
-	{"DrawRect", DrawMode::Rectangle},
-	{"DrawCircle", DrawMode::Circle},
-	{"DrawEllipse", DrawMode::Ellipse}
-};
+#include "ToolbarMaps.h"
 
 const QBrush TransparentBrush = QBrush(QColor(0, 0, 0, 0));
 
@@ -29,21 +14,20 @@ public:
 
 	DrawHandler& operator=(const DrawHandler& other);
 
-	QPainter& Painter() { return m_painter; }
+	LeftToolBar getMode() { return m_mode; }
+	void setMode(LeftToolBar mode) { m_mode = mode; }
 
-	DrawMode getMode() { return m_mode; }
-	void setMode(DrawMode mode) { m_mode = mode; }
-	void setMode(const QString& modeStr);
-	void Draw();
-	
+	void draw(QPainter& painter, const QRect& rect);
+	void drawPolygon(QPainter& painter);
+	void drawRectangle(QPainter& painter, const QRect& rect);
+	void drawCircle(QPainter& painter, const QRect& rect);
+	void drawEllipse(QPainter& painter, const QRect& rect);
+
+	void addPoint(const QPoint& point) { m_points.push_back(point);}
+
 private:
-	void DrawLine();
-	void DrawRectangle();
-	void DrawCircle();
-	void DrawEllipse();
 
-	QPainter m_painter;
 	QPen m_pen;
-	DrawMode m_mode = DrawMode::Rectangle;
+	LeftToolBar m_mode = LeftToolBar::Rectangle;
+	std::vector<QPoint> m_points;
 };
-

@@ -487,6 +487,12 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="topToolBar">
@@ -499,6 +505,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionDrawMode"/>
   </widget>
   <widget class="QToolBar" name="leftToolBar">
    <property name="windowTitle">
@@ -510,24 +517,37 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionDrawLines"/>
+   <addaction name="actionDrawPolygon"/>
    <addaction name="actionDrawRect"/>
    <addaction name="actionDrawCircle"/>
    <addaction name="actionDrawEllipse"/>
   </widget>
-  <action name="actionDrawLines">
+  <action name="actionDrawPolygon">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normaloff>../../icons/line.png</normaloff>../../icons/line.png</iconset>
    </property>
    <property name="text">
-    <string>DrawLines</string>
+    <string>DrawPolygon</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;point to point polygon drawing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionDrawRect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../icons/rectangleicon.png</normaloff>../../icons/rectangleicon.png</iconset>
+   </property>
    <property name="text">
     <string>DrawRect</string>
    </property>
@@ -536,6 +556,13 @@
    </property>
   </action>
   <action name="actionDrawCircle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../icons/circleicon.png</normaloff>../../icons/circleicon.png</iconset>
+   </property>
    <property name="text">
     <string>DrawCircle</string>
    </property>
@@ -544,11 +571,39 @@
    </property>
   </action>
   <action name="actionDrawEllipse">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../icons/ellipseicon.png</normaloff>../../icons/ellipseicon.png</iconset>
+   </property>
    <property name="text">
     <string>DrawEllipse</string>
    </property>
    <property name="toolTip">
     <string>draw ellipse</string>
+   </property>
+  </action>
+  <action name="actionDrawMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../icons/pencilicon.png</normaloff>../../icons/pencilicon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Draw</string>
+   </property>
+   <property name="toolTip">
+    <string>enable draw mode</string>
    </property>
   </action>
  </widget>
