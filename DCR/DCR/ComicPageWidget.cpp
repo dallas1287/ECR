@@ -41,16 +41,21 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
         pen.setColor(QColor(255, 255, 0));
         pen.setWidth(10);
         painter.setPen(pen);
-        painter.fillRect(mapRectFromGlobal(this, selected->getRect()), brush);
-        painter.drawRect(mapRectFromGlobal(this, selected->getRect()));
+        painter.fillRect(selected->getRect(), brush);
+        painter.drawRect(selected->getRect());
     }
+
+    pen.setColor(QColor(0, 0, 0));
+    pen.setWidth(3);
+    painter.setPen(pen);
+    QRect r(QPoint(0, 0), size());
+    painter.fillRect(r, brush);
+    painter.drawRect(r);
 
     pen.setColor(QColor(255, 0, 0));
     pen.setWidth(5);
     painter.setPen(pen);
-
-    QRect rect(mapRectFromGlobal(this, getDrawnRect()));
-    //QRect r(QPoint(0, 0), size());
+    QRect rect(getDrawnRect());
     painter.fillRect(rect, brush);
     painter.drawRect(rect);
 }
@@ -80,6 +85,18 @@ QRect ComicPageWidget::getDrawnRect(const QPoint& start, const QPoint& cur) cons
         bottom = start.y();
     }
 
+    if (top < 0)
+        top = 0;
+
+    if (left < 0)
+        left = 0;
+
+    if (bottom > height())
+        bottom = height();
+
+    if (right > width())
+        right = width();
+
     return QRect(QPoint(left, top), QSize(right - left, bottom - top));
 }
 
@@ -107,7 +124,7 @@ void ComicPageWidget::mouseMoveEvent(QMouseEvent* event)
     if (!m_drawing || !m_shapeStarted)
         return;
 
-    m_curPos = event->globalPos();
+    m_curPos = event->pos();
     repaint();
 }
 
@@ -117,7 +134,7 @@ void ComicPageWidget::mousePressEvent(QMouseEvent* event)
         return;
 
     m_shapeStarted = true;
-    m_rectStart = event->globalPos();
+    m_rectStart = event->pos();
     m_curPos = QPoint(m_rectStart.x() + 10, m_rectStart.y() + 10); //assure a base shape of 10 pixels 
     m_cpHandler.setSelected(nullptr);
     repaint();
@@ -128,13 +145,13 @@ void ComicPageWidget::mouseReleaseEvent(QMouseEvent* event)
     if (!m_drawing)
         return;
     m_shapeStarted = false;
-    m_rectEnd = event->globalPos();
+    m_rectEnd = event->pos();
     emit signalPanelObjectCreation(getDrawnRect(m_rectEnd));
 }
 
 void ComicPageWidget::mouseDoubleClickEvent(QMouseEvent* event)
 {
-    auto panelObj = m_cpHandler.getEnclosingShape(event->globalPos());
+    auto panelObj = m_cpHandler.getEnclosingShape(event->pos());
     if (!panelObj)
         return;
 

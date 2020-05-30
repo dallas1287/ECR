@@ -24,6 +24,6 @@ PanelObject& PanelObject::operator=(const PanelObject& other)
 void PanelObject::createGraphicPanel()
 {
 	m_gPanel.reset(new GraphicPanel(m_owner, this));
-	m_gPanel->setGeometry(mapRectFromGlobal(m_gPanel.get(), m_rect));
+	m_gPanel->setGeometry(m_rect);
 	((ComicPageWidget*)m_owner)->addPanelWidget(this);
 }

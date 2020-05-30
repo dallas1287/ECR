@@ -76,19 +76,19 @@ void GraphicPanel::panelPaint()
 	if(m_gObj)
 		m_gObj->Draw();
 	
-	QPen pen(QColor(255, 0, 255));
-	pen.setWidth(10);
-	painter.setPen(pen);
-	pen.setStyle(Qt::PenStyle::SolidLine);
+	//QPen pen(QColor(255, 0, 255));
+	//pen.setWidth(10);
+	//painter.setPen(pen);
+	//pen.setStyle(Qt::PenStyle::SolidLine);
 
-	QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
+	//QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
 
-	painter.beginNativePainting();
+	//painter.beginNativePainting();
 
-	QRect geo(QPoint(0,0), QSize(50, 50));
-	painter.fillRect(geo, brush);
-	painter.drawRect(geo);
-	painter.endNativePainting();
+	//QRect geo(QPoint(0,0), QSize(50, 50));
+	//painter.fillRect(geo, brush);
+	//painter.drawRect(geo);
+	//painter.endNativePainting();
 
 	painter.end();
 }
