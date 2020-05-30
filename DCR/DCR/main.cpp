@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 #endif
     QApplication a(argc, argv);
     DigitalComicReader w;
-    w.centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
+    //w.centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
     w.setMouseTracking(true);
     w.showMaximized();
     return a.exec();
