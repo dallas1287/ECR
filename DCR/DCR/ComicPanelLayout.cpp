@@ -4,6 +4,10 @@ ComicPanelLayout::ComicPanelLayout() : QLayout()
 {
 }
 
+ComicPanelLayout::ComicPanelLayout(QWidget* parent) : QLayout(parent)
+{
+}
+
 ComicPanelLayout::~ComicPanelLayout()
 {
 	QLayoutItem* item;

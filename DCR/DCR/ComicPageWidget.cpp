@@ -10,6 +10,8 @@ ComicPageWidget::ComicPageWidget(QWidget* parent, Qt::WindowFlags f) : QWidget(p
         delete oldlayout;
     setLayout(&m_layout);
 
+    setFixedSize(m_size);
+
     setFocusPolicy(Qt::StrongFocus);
 
     connect(this, &ComicPageWidget::signalPanelObjectCreation, &m_cpHandler, &ComicPanelHandler::createPanelObject);
@@ -24,15 +26,20 @@ ComicPageWidget::~ComicPageWidget()
 {
 }
 
+void ComicPageWidget::resizeEvent(QResizeEvent* event)
+{
+    auto a = event->oldSize();
+    auto b = event->size();
+    bool stophere = true;
+}
+
 void ComicPageWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
 
-    //QPen pen;
-    //pen.setStyle(Qt::PenStyle::SolidLine);
-    //painter.setRenderHint(QPainter::Antialiasing, true);
-
-    //QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
+    QPen pen;
+    pen.setStyle(Qt::PenStyle::SolidLine);
+    painter.setRenderHint(QPainter::Antialiasing, true);
 
     ////draw selected
     //auto selected = m_cpHandler.getSelected();
@@ -45,12 +52,13 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
     //    painter.drawRect(selected->getRect());
     //}
 
-    //pen.setColor(QColor(0, 0, 0));
-    //pen.setWidth(3);
-    //painter.setPen(pen);
-    //QRect r(QPoint(0, 0), size());
-    //painter.fillRect(r, brush);
-    //painter.drawRect(r);
+    pen.setColor(QColor(0, 0, 0));
+    pen.setWidth(3);
+    painter.setPen(pen);
+    QRect r(QPoint(0, 0), size());
+    QBrush brush(QColor(255, 255, 255)); //fill white background
+    painter.fillRect(r, brush);
+    painter.drawRect(r);
 
     m_drawHandler.draw(painter, getDrawnRect());
 }
@@ -161,5 +169,4 @@ void ComicPageWidget::mouseDoubleClickEvent(QMouseEvent* event)
 
     m_cpHandler.setSelected(panelObj);
     emit signalGraphicPanelCreation(panelObj);
-    repaint();
 }

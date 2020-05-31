@@ -6,9 +6,9 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
 {
     ui.setupUi(this);
     m_pageWidget.reset(new ComicPageWidget(this));
-    m_pageWidget->setSizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
-    ui.gridLayout->addWidget(m_pageWidget.get());
-    ui.gridLayout->setContentsMargins(ui.centralWidget->contentsMargins());
+    ui.scrollArea->setWidget(m_pageWidget.get());
+    ui.scrollArea->setBackgroundRole(QPalette::Dark);
+
 
     connect(ui.leftToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
     connect(ui.topToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);

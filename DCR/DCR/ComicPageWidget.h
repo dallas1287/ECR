@@ -31,6 +31,8 @@ protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
 	virtual void mouseReleaseEvent(QMouseEvent* event) override;
 
+	virtual void resizeEvent(QResizeEvent* event);
+
 private:
 	QRect getDrawnRect(const QPoint& start, const QPoint& cur) const;
 	QRect getDrawnRect(const QPoint& input) const;
@@ -39,6 +41,8 @@ private:
 	ComicPanelLayout m_layout;
 	ComicPanelHandler m_cpHandler = ComicPanelHandler(this);
 	DrawHandler m_drawHandler;
+
+	QSize m_size = QSize(1080, 1920);
 
 	bool m_drawing = false;
 	bool m_shapeStarted = false;

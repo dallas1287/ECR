@@ -7,6 +7,7 @@ class ComicPanelLayout : public QLayout
 {
 public:
 	ComicPanelLayout();
+	ComicPanelLayout(QWidget* parent);
 	~ComicPanelLayout();
 
 protected:

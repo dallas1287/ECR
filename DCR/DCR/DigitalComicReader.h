@@ -7,6 +7,7 @@
 #include "PanelObject.h"
 #include "DrawHandler.h"
 #include "ComicPanelHandler.h"
+#include "ComicPanelLayout.h"
 
 class DigitalComicReader : public QMainWindow
 {
@@ -27,8 +28,9 @@ private:
 	void handleLeftToolBarAction(LeftToolBar selection);
 
     Ui::DigitalComicReaderClass ui;
-
 	std::unique_ptr<ComicPageWidget> m_pageWidget;
-
 	ComicPanelHandler m_cpHandler = ComicPanelHandler(this);
+
+	QWidget* dumb = nullptr;
+	ComicPanelLayout* dumbLayout = nullptr;
 };
