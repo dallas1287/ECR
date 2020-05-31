@@ -17,6 +17,7 @@ public:
 
 	QWidget* getOwner() { return m_owner; }
 	const QRect& getRect() { return m_rect; }
+	QRect& getRectToEdit() { return m_rect; }
 	GraphicPanel* getGraphicPanel() { return m_gPanel.get(); }
 
 	DrawType getDrawMode() { return m_drawMode; }

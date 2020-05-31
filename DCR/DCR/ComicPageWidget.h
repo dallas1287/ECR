@@ -7,17 +7,27 @@
 
 struct NewShape
 {
+	bool shapeStarted = false;
 	QPoint startPt;
-	QPoint endPt; 
 	QPoint curPt;
-	QPoint movingStartPt;
-	QRect editingRect;
 
 	void reset()
 	{
-		startPt = { -1, -1 };
-		endPt = curPt = movingStartPt = startPt;
-		editingRect = QRect();
+		shapeStarted = false;
+		startPt = QPoint();
+		curPt = startPt;
+	}
+};
+
+struct EditShape
+{
+	PanelObject* pObj = nullptr;
+	QPoint startPt;
+
+	void reset()
+	{
+		pObj = nullptr;
+		startPt = QPoint();
 	}
 };
 
@@ -55,6 +65,7 @@ private:
 	QRect getDrawnRect() const;
 
 	void movePanel(const QPoint& curPos);
+	void movePanel(const QPoint& curPos, PanelObject* pObj);
 
 	ComicPanelLayout m_layout;
 	ComicPanelHandler m_cpHandler = ComicPanelHandler(this);
@@ -63,8 +74,8 @@ private:
 	QSize m_size = QSize(1080, 1920);
 
 	bool m_drawing = false;
-	bool m_shapeStarted = false;
 	bool m_movingPanel = false;
 	NewShape m_newShape;
+	EditShape m_editShape;
 };
 

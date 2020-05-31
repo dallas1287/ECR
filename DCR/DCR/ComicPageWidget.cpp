@@ -55,7 +55,7 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
 
     //draw current
     if (m_movingPanel)
-        m_drawHandler.draw(painter, m_newShape.editingRect);
+        m_drawHandler.draw(painter, m_editShape.pObj->getRect());
     else if(m_drawing)
         m_drawHandler.draw(painter, getDrawnRect());
 
@@ -117,23 +117,24 @@ void ComicPageWidget::addPanelWidget(PanelObject* panelObj)
     layout()->addWidget(panelObj->getGraphicPanel());
 }
 
-void ComicPageWidget::movePanel(const QPoint& curPos)
-{
-    int vmovement = curPos.y() - m_newShape.movingStartPt.y();
-    int hmovement = curPos.x() - m_newShape.movingStartPt.x();
-    m_newShape.movingStartPt = curPos;
-
-    QPoint delta(hmovement, vmovement);
-    QPoint moved_tl = m_newShape.editingRect.topLeft();
-    m_newShape.editingRect.moveTopLeft(moved_tl + delta);
-}
-
 PanelObject* ComicPageWidget::getEnclosingShape(const QPoint& cursor)
 {
     auto iter = std::find_if(m_cpHandler.panelObjects().begin(), m_cpHandler.panelObjects().end(), [&](std::unique_ptr<PanelObject>& p) { return p->getRect().contains(cursor); });
     if (iter != m_cpHandler.panelObjects().end())
         return (*iter).get();
     return nullptr;
+}
+
+void ComicPageWidget::movePanel(const QPoint& curPos)
+{
+
+    int vmovement = curPos.y() - m_editShape.startPt.y();
+    int hmovement = curPos.x() - m_editShape.startPt.x();
+    m_editShape.startPt = curPos;
+
+    QPoint delta(hmovement, vmovement);
+    QPoint moved_tl = m_editShape.pObj->getRect().topLeft();
+    m_editShape.pObj->getRectToEdit().moveTopLeft(moved_tl + delta);
 }
 
 /**************************************************************************************************
@@ -147,7 +148,7 @@ void ComicPageWidget::mouseMoveEvent(QMouseEvent* event)
 
     if (m_movingPanel)
         movePanel(event->pos());
-    else if(m_shapeStarted)
+    else if(m_newShape.shapeStarted)
         m_newShape.curPt = event->pos();
     
     repaint();
@@ -158,22 +159,19 @@ void ComicPageWidget::mousePressEvent(QMouseEvent* event)
     if (!m_drawing)
         return;
 
-    //handle moving
-    if (m_newShape.editingRect.isValid() && !m_newShape.editingRect.isNull() && m_newShape.editingRect.contains(event->pos()))
+    //handle editing
+    PanelObject* movingShape = getEnclosingShape(event->pos());
+    if (movingShape)
     {
         m_movingPanel = true;
-        m_newShape.movingStartPt = event->pos();
+        m_editShape.startPt = event->pos();
+        m_editShape.pObj = movingShape;
         return;
     }
 
-    if (getEnclosingShape(event->pos()))
-    {
-
-    }
-
     //handle drawing
-    m_shapeStarted = true;
-    m_newShape.editingRect.setRect(0, 0, 0, 0); //invalidated
+    m_editShape.reset(); //invalidates the editShape object, if we've made it this far then we're drawing a new shape
+    m_newShape.shapeStarted = true;
 
     if (getDrawMode() == DrawType::Polygon)
     {
@@ -200,10 +198,8 @@ void ComicPageWidget::mouseReleaseEvent(QMouseEvent* event)
         return;
     }
     
-    m_shapeStarted = false;
-    m_newShape.endPt = event->pos();
-    m_newShape.editingRect = getDrawnRect(m_newShape.endPt);
-    emit signalPanelObjectCreation(getDrawMode(), getDrawnRect(m_newShape.endPt));
+    m_newShape.shapeStarted = false;
+    emit signalPanelObjectCreation(getDrawMode(), getDrawnRect(event->pos()));
 }
 
 void ComicPageWidget::mouseDoubleClickEvent(QMouseEvent* event)
