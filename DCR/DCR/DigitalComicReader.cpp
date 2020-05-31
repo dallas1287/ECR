@@ -9,9 +9,11 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
     ui.scrollArea->setWidget(m_pageWidget.get());
     ui.scrollArea->setBackgroundRole(QPalette::Dark);
 
+    ui.topToolBar->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(ui.leftToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
     connect(ui.topToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
+    connect(ui.topToolBar, &QWidget::customContextMenuRequested, this, &DigitalComicReader::handleTopTBContextMenu);
 }
 
 DigitalComicReader::~DigitalComicReader()
@@ -72,6 +74,30 @@ void DigitalComicReader::handleLeftToolBarAction(LeftToolBar selection)
             m_pageWidget->setDrawMode(selection);
         }
     }
+}
+
+void DigitalComicReader::handleTopTBContextMenu(const QPoint& pos)
+{
+    QAction* a = ui.topToolBar->actionAt(pos);
+    if (a == ui.topToolBar->actions()[(unsigned int)TopToolBar::CreateGrid])
+    {
+        QMenu* gridCtxMenu = new QMenu(this);
+        QAction grid("Make Grid");
+        grid.setIcon(a->icon());
+
+        gridCtxMenu->addAction(&grid);
+        auto w = ui.topToolBar->widgetForAction(a);
+
+        connect(&grid, &QAction::triggered, this, &DigitalComicReader::onCreateGridCtxMenu);
+        gridCtxMenu->exec(mapToGlobal(w->rect().bottomRight()));
+
+        delete gridCtxMenu;
+    }
+}
+
+void DigitalComicReader::onCreateGridCtxMenu()
+{
+    handleGridCreation();
 }
 
 void DigitalComicReader::handleGridCreation()

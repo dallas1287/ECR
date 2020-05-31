@@ -19,6 +19,8 @@ public:
 
 public slots:
 	void handleToolBarAction(QAction* action);
+	void handleTopTBContextMenu(const QPoint& pos);
+	void onCreateGridCtxMenu();
 
 protected:
 	virtual void keyPressEvent(QKeyEvent* event) override;
