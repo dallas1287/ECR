@@ -38,6 +38,8 @@ private:
 	QRect getDrawnRect(const QPoint& input) const;
 	QRect getDrawnRect() const;
 
+	void movePanel(const QPoint& curPos);
+
 	ComicPanelLayout m_layout;
 	ComicPanelHandler m_cpHandler = ComicPanelHandler(this);
 	DrawHandler m_drawHandler;
@@ -47,5 +49,11 @@ private:
 	bool m_drawing = false;
 	bool m_shapeStarted = false;
 	QPoint m_rectStart, m_rectEnd, m_curPos;
+
+	QRect m_editingRect;
+
+	bool m_movingPanel = false;
+	QPoint m_movingStartPos;
+	QPoint m_movingCurPos;
 };
 

@@ -1,7 +1,6 @@
 #include "ComicPageWidget.h"
 #include "common.h"
 
-
 ComicPageWidget::ComicPageWidget(QWidget* parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
     //setting a layout only works if there isn't already a layout so delete if necessary
@@ -41,7 +40,7 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
     pen.setStyle(Qt::PenStyle::SolidLine);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    ////draw selected
+    //draw selected
     //auto selected = m_cpHandler.getSelected();
     //if (selected)
     //{
@@ -52,6 +51,7 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
     //    painter.drawRect(selected->getRect());
     //}
 
+    //draw background
     pen.setColor(QColor(0, 0, 0));
     pen.setWidth(3);
     painter.setPen(pen);
@@ -59,8 +59,10 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
     QBrush brush(QColor(255, 255, 255)); //fill white background
     painter.fillRect(r, brush);
     painter.drawRect(r);
-
-    m_drawHandler.draw(painter, getDrawnRect());
+    if (m_movingPanel)
+        m_drawHandler.draw(painter, m_editingRect);
+    else
+        m_drawHandler.draw(painter, getDrawnRect());
 }
 
 QRect ComicPageWidget::getDrawnRect(const QPoint& start, const QPoint& cur) const
@@ -118,16 +120,31 @@ void ComicPageWidget::addPanelWidget(PanelObject* panelObj)
     layout()->addWidget(panelObj->getGraphicPanel());
 }
 
+void ComicPageWidget::movePanel(const QPoint& curPos)
+{
+    int vmovement = curPos.y() - m_movingStartPos.y();
+    int hmovement = curPos.x() - m_movingStartPos.x();
+    m_movingStartPos = curPos;
+
+    QPoint delta(hmovement, vmovement);
+    QPoint moved_tl = m_editingRect.topLeft();
+    m_editingRect.moveTopLeft(moved_tl + delta);
+}
+
 /**************************************************************************************************
 **************************Mouse Events*************************************************************
 **************************************************************************************************/
 
 void ComicPageWidget::mouseMoveEvent(QMouseEvent* event)
 {
-    if (!m_drawing || !m_shapeStarted)
+    if (!m_drawing)
         return;
 
-    m_curPos = event->pos();
+    if (m_movingPanel)
+        movePanel(event->pos());
+    else if(m_shapeStarted)
+        m_curPos = event->pos();
+    
     repaint();
 }
 
@@ -136,7 +153,17 @@ void ComicPageWidget::mousePressEvent(QMouseEvent* event)
     if (!m_drawing)
         return;
 
+    //handle moving
+    if (m_editingRect.isValid() && !m_editingRect.isNull() && m_editingRect.contains(event->pos()))
+    {
+        m_movingPanel = true;
+        m_movingStartPos = event->pos();
+        return;
+    }
+
+    //handle drawing
     m_shapeStarted = true;
+    m_editingRect.setRect(0, 0, 0, 0); //invalidated
 
     if (getDrawMode() == LeftToolBar::Polygon)
     {
@@ -156,8 +183,16 @@ void ComicPageWidget::mouseReleaseEvent(QMouseEvent* event)
 {
     if (!m_drawing)
         return;
+
+    if (m_movingPanel)
+    {
+        m_movingPanel = false;
+        return;
+    }
+    
     m_shapeStarted = false;
     m_rectEnd = event->pos();
+    m_editingRect = getDrawnRect(m_rectEnd);
     emit signalPanelObjectCreation(getDrawnRect(m_rectEnd));
 }
 
