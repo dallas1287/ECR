@@ -82,14 +82,20 @@ void DigitalComicReader::handleTopTBContextMenu(const QPoint& pos)
     if (a == ui.topToolBar->actions()[(unsigned int)TopToolBar::CreateGrid])
     {
         QMenu* gridCtxMenu = new QMenu(this);
-        QAction grid("Make Grid");
+        QAction grid(tr("Make Grid"));
         grid.setIcon(a->icon());
-
+        QAction grid2(tr("Make another Grid"));
+        grid2.setIcon(a->icon());
         gridCtxMenu->addAction(&grid);
-        auto w = ui.topToolBar->widgetForAction(a);
+        gridCtxMenu->addAction(&grid2);
+
+        //this is lame but it seems to put the ctx menus first item's center-ish at the pt given 
+        //so the below pt puts it in a better position
+        auto wSize = ui.topToolBar->widgetForAction(a)->sizeHint();
+        QPoint pt(wSize.width() * 2, wSize.height() + wSize.height() / 2);
 
         connect(&grid, &QAction::triggered, this, &DigitalComicReader::onCreateGridCtxMenu);
-        gridCtxMenu->exec(mapToGlobal(w->rect().bottomRight()));
+        gridCtxMenu->exec(mapToGlobal(pt));
 
         delete gridCtxMenu;
     }
