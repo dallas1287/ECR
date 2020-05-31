@@ -2,12 +2,12 @@
 #include "DigitalComicReader.h"
 #include "common.h"
 
-PanelObject::PanelObject(QWidget* owner, DrawType type, const QRect& rect): m_owner(owner), m_type(type), m_rect(rect)
+PanelObject::PanelObject(QWidget* owner, DrawType mode, const QRect& rect): m_owner(owner), m_drawMode(mode), m_rect(rect)
 {
 }
 
 //TODO: fix the copy constructor and copy assignment for the unique_ptr
-PanelObject::PanelObject(const PanelObject& other): PanelObject(other.m_owner, other.m_type, other.m_rect)
+PanelObject::PanelObject(const PanelObject& other): PanelObject(other.m_owner, other.m_drawMode, other.m_rect)
 {
 	m_gPanel.reset(other.m_gPanel.get());
 }

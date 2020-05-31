@@ -1,7 +1,7 @@
 #pragma once
 #include "PanelObject.h"
 
-typedef std::vector<std::unique_ptr<PanelObject>> PanelObjectPool;
+
 
 class ComicPanelHandler : public QObject
 {
@@ -21,7 +21,7 @@ public:
 	PanelObject* getEnclosingShape(const QPoint& cursor);
 
 public slots:
-	void createPanelObject(DrawType type, const QRect& rect);
+	void createPanelObject(DrawType mode, const QRect& rect);
 	void createGraphicPanel(PanelObject* panelObj);
 
 private:

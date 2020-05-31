@@ -3,10 +3,12 @@
 #include "GraphicPanel.h"
 #include "ToolbarMaps.h"
 
+typedef std::vector<std::unique_ptr<PanelObject>> PanelObjectPool;
+
 class PanelObject
 {
 public:
-	PanelObject(QWidget* owner, DrawType type, const QRect& rect);
+	PanelObject(QWidget* owner, DrawType mode, const QRect& rect);
 	PanelObject(const PanelObject& other);
 
 	~PanelObject();
@@ -17,8 +19,8 @@ public:
 	const QRect& getRect() { return m_rect; }
 	GraphicPanel* getGraphicPanel() { return m_gPanel.get(); }
 
-	DrawType getType() { return m_type; }
-	void setType(DrawType type) {m_type = type;}
+	DrawType getDrawMode() { return m_drawMode; }
+	void setDrawMode(DrawType type) {m_drawMode = type;}
 
 	void setIndex(int index) { m_index = index; }
 	int getIndex() { return m_index; }
@@ -29,7 +31,7 @@ public:
 
 private:
 	QWidget* m_owner;
-	DrawType m_type = DrawType::Rectangle;
+	DrawType m_drawMode = DrawType::Rectangle;
 	QRect m_rect;
 	std::unique_ptr<GraphicPanel> m_gPanel;
 	int m_index = -1;

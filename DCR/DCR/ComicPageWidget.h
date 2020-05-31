@@ -15,7 +15,7 @@ public:
 
 	bool isDrawing() { return m_drawing; }
 	void setDrawing(bool state) { m_drawing = state; }
-	DrawType getDrawMode() { return m_drawHandler.getMode(); }
+	DrawType getDrawMode() { return m_drawHandler.getDrawMode(); }
 	void setDrawMode(DrawType selection); 
 	void setDrawMode(LeftToolBar selection);
 	void addPanelWidget(PanelObject* panelObj);

@@ -28,7 +28,7 @@ ComicPageWidget::~ComicPageWidget()
 void ComicPageWidget::setDrawMode(DrawType selection)
 {
     if (selection >= DrawType::Polygon && selection <= DrawType::Ellipse) 
-        m_drawHandler.setMode(selection); 
+        m_drawHandler.setDrawMode(selection); 
 }
 
 //this is wild, but to convert the toolbar enum to the drawtype enum, it converts it to the underlying type of int,
@@ -36,7 +36,7 @@ void ComicPageWidget::setDrawMode(DrawType selection)
 void ComicPageWidget::setDrawMode(LeftToolBar selection)
 {
     if (selection >= LeftToolBar::Polygon && selection <= LeftToolBar::Ellipse)
-        m_drawHandler.setMode((DrawType)(unsigned int)selection);
+        m_drawHandler.setDrawMode((DrawType)(unsigned int)selection);
 }
 
 void ComicPageWidget::paintEvent(QPaintEvent* event)
@@ -59,7 +59,7 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
     else if(m_drawing)
         m_drawHandler.draw(painter, getDrawnRect());
 
-    //m_drawHandler.draw(painter, m_cpHandler.panelObjects());
+    m_drawHandler.draw(painter, m_cpHandler.panelObjects());
 }
 
 QRect ComicPageWidget::getDrawnRect(const QPoint& start, const QPoint& cur) const

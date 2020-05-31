@@ -17,9 +17,9 @@ DrawHandler& DrawHandler::operator=(const DrawHandler& other)
 	return *this;
 }
 
-void DrawHandler::draw(QPainter& painter, const QRect& rect)
+void DrawHandler::draw(QPainter& painter, DrawType mode, const QRect& rect)
 {
-	switch (m_mode)
+	switch (mode)
 	{
 		case DrawType::Polygon:
 			drawPolygon(painter);
@@ -36,6 +36,17 @@ void DrawHandler::draw(QPainter& painter, const QRect& rect)
 		default:
 			return;
 	}
+}
+
+void DrawHandler::draw(QPainter& painter, const QRect& rect)
+{
+	draw(painter, m_mode, rect);
+}
+
+void DrawHandler::draw(QPainter& painter, PanelObjectPool& pObjs)
+{
+	for (auto& p : pObjs)
+		draw(painter, p->getDrawMode(), p->getRect());
 }
 
 void DrawHandler::drawPolygon(QPainter& painter)

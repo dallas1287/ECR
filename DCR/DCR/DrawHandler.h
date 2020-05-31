@@ -15,10 +15,12 @@ public:
 
 	DrawHandler& operator=(const DrawHandler& other);
 
-	DrawType getMode() { return m_mode; }
-	void setMode(DrawType mode) { m_mode = mode; }
+	DrawType getDrawMode() { return m_mode; }
+	void setDrawMode(DrawType mode) { m_mode = mode; }
 
 	void draw(QPainter& painter, const QRect& rect);
+	void draw(QPainter& painter, DrawType mode, const QRect& rect);
+	void draw(QPainter& painter, PanelObjectPool& pObjs);
 	void drawPolygon(QPainter& painter);
 	void drawRectangle(QPainter& painter, const QRect& rect);
 	void drawCircle(QPainter& painter, const QRect& rect);
@@ -26,11 +28,10 @@ public:
 	void drawBackground(QPainter& painter, const QSize& pageSize);
 	void drawSelected(QPainter& painter, PanelObject* selected);
 
-	void addPoint(const QPoint& point) { m_points.push_back(point);}
+	void addPoint(const QPoint& point) { m_points.push_back(point); }
 
 private:
-
-	QPen m_pen;
 	DrawType m_mode = DrawType::Rectangle;
+	QPen m_pen;
 	std::vector<QPoint> m_points;
 };
