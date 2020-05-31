@@ -55,7 +55,7 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
 
     //draw current
     if (m_movingPanel)
-        m_drawHandler.draw(painter, m_editingRect);
+        m_drawHandler.draw(painter, m_newShape.editingRect);
     else if(m_drawing)
         m_drawHandler.draw(painter, getDrawnRect());
 
@@ -104,12 +104,12 @@ QRect ComicPageWidget::getDrawnRect(const QPoint& start, const QPoint& cur) cons
 
 QRect ComicPageWidget::getDrawnRect(const QPoint& cur) const
 {
-    return getDrawnRect(m_rectStart, cur);
+    return getDrawnRect(m_newShape.startPt, cur);
 }
 
 QRect ComicPageWidget::getDrawnRect() const
 {
-    return getDrawnRect(m_rectStart, m_curPos);
+    return getDrawnRect(m_newShape.startPt, m_newShape.curPt);
 }
 
 void ComicPageWidget::addPanelWidget(PanelObject* panelObj)
@@ -119,13 +119,21 @@ void ComicPageWidget::addPanelWidget(PanelObject* panelObj)
 
 void ComicPageWidget::movePanel(const QPoint& curPos)
 {
-    int vmovement = curPos.y() - m_movingStartPos.y();
-    int hmovement = curPos.x() - m_movingStartPos.x();
-    m_movingStartPos = curPos;
+    int vmovement = curPos.y() - m_newShape.movingStartPt.y();
+    int hmovement = curPos.x() - m_newShape.movingStartPt.x();
+    m_newShape.movingStartPt = curPos;
 
     QPoint delta(hmovement, vmovement);
-    QPoint moved_tl = m_editingRect.topLeft();
-    m_editingRect.moveTopLeft(moved_tl + delta);
+    QPoint moved_tl = m_newShape.editingRect.topLeft();
+    m_newShape.editingRect.moveTopLeft(moved_tl + delta);
+}
+
+PanelObject* ComicPageWidget::getEnclosingShape(const QPoint& cursor)
+{
+    auto iter = std::find_if(m_cpHandler.panelObjects().begin(), m_cpHandler.panelObjects().end(), [&](std::unique_ptr<PanelObject>& p) { return p->getRect().contains(cursor); });
+    if (iter != m_cpHandler.panelObjects().end())
+        return (*iter).get();
+    return nullptr;
 }
 
 /**************************************************************************************************
@@ -140,7 +148,7 @@ void ComicPageWidget::mouseMoveEvent(QMouseEvent* event)
     if (m_movingPanel)
         movePanel(event->pos());
     else if(m_shapeStarted)
-        m_curPos = event->pos();
+        m_newShape.curPt = event->pos();
     
     repaint();
 }
@@ -151,16 +159,21 @@ void ComicPageWidget::mousePressEvent(QMouseEvent* event)
         return;
 
     //handle moving
-    if (m_editingRect.isValid() && !m_editingRect.isNull() && m_editingRect.contains(event->pos()))
+    if (m_newShape.editingRect.isValid() && !m_newShape.editingRect.isNull() && m_newShape.editingRect.contains(event->pos()))
     {
         m_movingPanel = true;
-        m_movingStartPos = event->pos();
+        m_newShape.movingStartPt = event->pos();
         return;
+    }
+
+    if (getEnclosingShape(event->pos()))
+    {
+
     }
 
     //handle drawing
     m_shapeStarted = true;
-    m_editingRect.setRect(0, 0, 0, 0); //invalidated
+    m_newShape.editingRect.setRect(0, 0, 0, 0); //invalidated
 
     if (getDrawMode() == DrawType::Polygon)
     {
@@ -168,8 +181,8 @@ void ComicPageWidget::mousePressEvent(QMouseEvent* event)
     }
     else
     {
-        m_rectStart = event->pos();
-        m_curPos = QPoint(m_rectStart.x() + 10, m_rectStart.y() + 10); //assure a base shape of 10 pixels
+        m_newShape.startPt = event->pos();
+        m_newShape.curPt = QPoint(m_newShape.startPt.x() + 10, m_newShape.startPt.y() + 10); //assure a base shape of 10 pixels
     }
 
     m_cpHandler.setSelected(nullptr);
@@ -188,14 +201,14 @@ void ComicPageWidget::mouseReleaseEvent(QMouseEvent* event)
     }
     
     m_shapeStarted = false;
-    m_rectEnd = event->pos();
-    m_editingRect = getDrawnRect(m_rectEnd);
-    emit signalPanelObjectCreation(getDrawMode(), getDrawnRect(m_rectEnd));
+    m_newShape.endPt = event->pos();
+    m_newShape.editingRect = getDrawnRect(m_newShape.endPt);
+    emit signalPanelObjectCreation(getDrawMode(), getDrawnRect(m_newShape.endPt));
 }
 
 void ComicPageWidget::mouseDoubleClickEvent(QMouseEvent* event)
 {
-    auto panelObj = m_cpHandler.getEnclosingShape(event->pos());
+    auto panelObj = getEnclosingShape(event->pos());
     if (!panelObj)
         return;
 

@@ -18,7 +18,6 @@ public:
 
 	void setSelected(PanelObject* panelObj);
 	PanelObject* getSelected() const { return m_selected; }
-	PanelObject* getEnclosingShape(const QPoint& cursor);
 
 public slots:
 	void createPanelObject(DrawType mode, const QRect& rect);

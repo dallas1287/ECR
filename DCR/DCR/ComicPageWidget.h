@@ -5,6 +5,22 @@
 #include "PanelObject.h"
 #include "DrawHandler.h"
 
+struct NewShape
+{
+	QPoint startPt;
+	QPoint endPt; 
+	QPoint curPt;
+	QPoint movingStartPt;
+	QRect editingRect;
+
+	void reset()
+	{
+		startPt = { -1, -1 };
+		endPt = curPt = movingStartPt = startPt;
+		editingRect = QRect();
+	}
+};
+
 class ComicPageWidget : public QWidget
 {
 	Q_OBJECT
@@ -19,6 +35,7 @@ public:
 	void setDrawMode(DrawType selection); 
 	void setDrawMode(LeftToolBar selection);
 	void addPanelWidget(PanelObject* panelObj);
+	PanelObject* getEnclosingShape(const QPoint& cursor);
 
 signals:
 	void signalPanelObjectCreation(DrawType type, const QRect& rect);
@@ -47,12 +64,7 @@ private:
 
 	bool m_drawing = false;
 	bool m_shapeStarted = false;
-	QPoint m_rectStart, m_rectEnd, m_curPos;
-
-	QRect m_editingRect;
-
 	bool m_movingPanel = false;
-	QPoint m_movingStartPos;
-	QPoint m_movingCurPos;
+	NewShape m_newShape;
 };
 

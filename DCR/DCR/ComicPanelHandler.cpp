@@ -48,11 +48,3 @@ void ComicPanelHandler::setSelected(PanelObject* selected)
     }
     m_selected = selected;
 }
-
-PanelObject* ComicPanelHandler::getEnclosingShape(const QPoint& cursor)
-{
-    auto iter = std::find_if(m_panelObjects.begin(), m_panelObjects.end(), [&](std::unique_ptr<PanelObject>& p) { return p->getRect().contains(cursor); });
-    if (iter != m_panelObjects.end())
-        return (*iter).get();
-    return nullptr;
-}
