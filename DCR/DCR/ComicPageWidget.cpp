@@ -25,11 +25,18 @@ ComicPageWidget::~ComicPageWidget()
 {
 }
 
-void ComicPageWidget::resizeEvent(QResizeEvent* event)
+void ComicPageWidget::setDrawMode(DrawType selection)
 {
-    auto a = event->oldSize();
-    auto b = event->size();
-    bool stophere = true;
+    if (selection >= DrawType::Polygon && selection <= DrawType::Ellipse) 
+        m_drawHandler.setMode(selection); 
+}
+
+//this is wild, but to convert the toolbar enum to the drawtype enum, it converts it to the underlying type of int,
+//then to the DrawType enum class
+void ComicPageWidget::setDrawMode(LeftToolBar selection)
+{
+    if (selection >= LeftToolBar::Polygon && selection <= LeftToolBar::Ellipse)
+        m_drawHandler.setMode((DrawType)(unsigned int)selection);
 }
 
 void ComicPageWidget::paintEvent(QPaintEvent* event)
@@ -40,29 +47,19 @@ void ComicPageWidget::paintEvent(QPaintEvent* event)
     pen.setStyle(Qt::PenStyle::SolidLine);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    //draw selected
-    //auto selected = m_cpHandler.getSelected();
-    //if (selected)
-    //{
-    //    pen.setColor(QColor(255, 255, 0));
-    //    pen.setWidth(10);
-    //    painter.setPen(pen);
-    //    painter.fillRect(selected->getRect(), brush);
-    //    painter.drawRect(selected->getRect());
-    //}
-
     //draw background
-    pen.setColor(QColor(0, 0, 0));
-    pen.setWidth(3);
-    painter.setPen(pen);
-    QRect r(QPoint(0, 0), size());
-    QBrush brush(QColor(255, 255, 255)); //fill white background
-    painter.fillRect(r, brush);
-    painter.drawRect(r);
+    m_drawHandler.drawBackground(painter, m_size);
+
+    //draw selected
+    m_drawHandler.drawSelected(painter, m_cpHandler.getSelected());
+
+    //draw current
     if (m_movingPanel)
         m_drawHandler.draw(painter, m_editingRect);
-    else
+    else if(m_drawing)
         m_drawHandler.draw(painter, getDrawnRect());
+
+    //m_drawHandler.draw(painter, m_cpHandler.panelObjects());
 }
 
 QRect ComicPageWidget::getDrawnRect(const QPoint& start, const QPoint& cur) const
@@ -165,7 +162,7 @@ void ComicPageWidget::mousePressEvent(QMouseEvent* event)
     m_shapeStarted = true;
     m_editingRect.setRect(0, 0, 0, 0); //invalidated
 
-    if (getDrawMode() == LeftToolBar::Polygon)
+    if (getDrawMode() == DrawType::Polygon)
     {
         m_drawHandler.addPoint(event->pos());
     }
@@ -193,7 +190,7 @@ void ComicPageWidget::mouseReleaseEvent(QMouseEvent* event)
     m_shapeStarted = false;
     m_rectEnd = event->pos();
     m_editingRect = getDrawnRect(m_rectEnd);
-    emit signalPanelObjectCreation(getDrawnRect(m_rectEnd));
+    emit signalPanelObjectCreation(getDrawMode(), getDrawnRect(m_rectEnd));
 }
 
 void ComicPageWidget::mouseDoubleClickEvent(QMouseEvent* event)

@@ -8,7 +8,7 @@ ComicPanelHandler::ComicPanelHandler(const ComicPanelHandler& other): ComicPanel
 {
     //don't love this as a copy, but compiler will complain about unique_ptrs and deleted functions and what not
     for (const auto& p : other.m_panelObjects)
-        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, p->getRect())));
+        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, p->getType(), p->getRect())));
 }
 
 ComicPanelHandler::~ComicPanelHandler()
@@ -20,19 +20,20 @@ ComicPanelHandler& ComicPanelHandler::operator=(const ComicPanelHandler& other)
 	m_owner = other.m_owner;
     m_panelObjects.clear();
     for (const auto& p : other.m_panelObjects)
-        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, p->getRect())));
+        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, p->getType(),  p->getRect())));
 
     return *this;
 }
 
-void ComicPanelHandler::createPanelObject(const QRect& rect)
+void ComicPanelHandler::createPanelObject(DrawType type, const QRect& rect)
 {
-    m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, rect)));
+    if(std::find_if(m_panelObjects.begin(), m_panelObjects.end(), [&](std::unique_ptr<PanelObject>& pObj) { return pObj->getRect() == rect; }) == m_panelObjects.end())
+        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, type, rect)));
 }
 
 void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj)
 {
-    if (panelObj)
+    if (panelObj && !panelObj->getGraphicPanel())
         panelObj->createGraphicPanel();
 }
 

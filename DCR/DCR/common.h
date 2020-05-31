@@ -2,6 +2,14 @@
 #include <QWidget>
 #include <QRect>
 
+enum class DrawType : unsigned int
+{
+	Polygon,
+	Rectangle,
+	Circle,
+	Ellipse
+};
+
 static QRect mapRectFromGlobal(QWidget* obj, const QRect& globalRect)
 {
 	if (globalRect.isNull() || !globalRect.isValid())

@@ -1,8 +1,9 @@
 #pragma once
 #include <map>
 #include <QString>
+#include "common.h"
 
-enum class TopToolBar
+enum class TopToolBar : unsigned int
 {
 	Drawing
 };
@@ -19,7 +20,7 @@ const std::map<TopToolBar, QString> TopTBRevMap =
 
 enum class LeftToolBar
 {
-	Polygon,
+	Polygon = (int) DrawType::Polygon,
 	Rectangle,
 	Circle,
 	Ellipse
@@ -32,3 +33,5 @@ const std::map<QString, LeftToolBar> LeftTBMap =
 	{"DrawCircle", LeftToolBar::Circle},
 	{"DrawEllipse", LeftToolBar::Ellipse}
 };
+
+

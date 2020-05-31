@@ -21,7 +21,7 @@ public:
 	PanelObject* getEnclosingShape(const QPoint& cursor);
 
 public slots:
-	void createPanelObject(const QRect& rect);
+	void createPanelObject(DrawType type, const QRect& rect);
 	void createGraphicPanel(PanelObject* panelObj);
 
 private:

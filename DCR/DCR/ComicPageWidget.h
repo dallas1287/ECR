@@ -15,12 +15,13 @@ public:
 
 	bool isDrawing() { return m_drawing; }
 	void setDrawing(bool state) { m_drawing = state; }
-	LeftToolBar getDrawMode() { return m_drawHandler.getMode(); }
-	void setDrawMode(LeftToolBar selection) { if (selection >= LeftToolBar::Polygon && selection <= LeftToolBar::Ellipse) m_drawHandler.setMode(selection); }
+	DrawType getDrawMode() { return m_drawHandler.getMode(); }
+	void setDrawMode(DrawType selection); 
+	void setDrawMode(LeftToolBar selection);
 	void addPanelWidget(PanelObject* panelObj);
 
 signals:
-	void signalPanelObjectCreation(const QRect& rect);
+	void signalPanelObjectCreation(DrawType type, const QRect& rect);
 	void signalGraphicPanelCreation(PanelObject* pObj);
 
 protected:
@@ -30,8 +31,6 @@ protected:
 	virtual void mousePressEvent(QMouseEvent* event) override;
 	virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
 	virtual void mouseReleaseEvent(QMouseEvent* event) override;
-
-	virtual void resizeEvent(QResizeEvent* event);
 
 private:
 	QRect getDrawnRect(const QPoint& start, const QPoint& cur) const;

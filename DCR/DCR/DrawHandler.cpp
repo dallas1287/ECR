@@ -21,16 +21,16 @@ void DrawHandler::draw(QPainter& painter, const QRect& rect)
 {
 	switch (m_mode)
 	{
-		case LeftToolBar::Polygon:
+		case DrawType::Polygon:
 			drawPolygon(painter);
 			break;
-		case LeftToolBar::Rectangle:
+		case DrawType::Rectangle:
 			drawRectangle(painter, rect);
 			break;
-		case LeftToolBar::Circle:
+		case DrawType::Circle:
 			drawCircle(painter, rect);
 			break;
-		case LeftToolBar::Ellipse:
+		case DrawType::Ellipse:
 			drawEllipse(painter, rect);
 			break;
 		default:
@@ -99,4 +99,29 @@ void DrawHandler::drawEllipse(QPainter& painter, const QRect& rect)
 
 	painter.fillRect(rect, brush);
 	painter.drawEllipse(rect);
+}
+
+void DrawHandler::drawBackground(QPainter& painter, const QSize& pageSize)
+{
+	QPen pen;
+	pen.setColor(QColor(0, 0, 0));
+    pen.setWidth(3);
+    painter.setPen(pen);
+    QRect r(QPoint(0, 0), pageSize);
+    QBrush brush(QColor(255, 255, 255)); //fill white background
+    painter.fillRect(r, brush);
+    painter.drawRect(r);
+}
+
+void DrawHandler::drawSelected(QPainter& painter, PanelObject* selected)
+{
+	if (selected)
+	{
+		QPen pen;
+		pen.setColor(QColor(255, 255, 0));
+		pen.setWidth(10);
+		painter.setPen(pen);
+		painter.fillRect(selected->getRect(), TransparentBrush);
+		painter.drawRect(selected->getRect());
+	}
 }

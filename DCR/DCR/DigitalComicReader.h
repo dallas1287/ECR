@@ -29,8 +29,4 @@ private:
 
     Ui::DigitalComicReaderClass ui;
 	std::unique_ptr<ComicPageWidget> m_pageWidget;
-	ComicPanelHandler m_cpHandler = ComicPanelHandler(this);
-
-	QWidget* dumb = nullptr;
-	ComicPanelLayout* dumbLayout = nullptr;
 };
