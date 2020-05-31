@@ -46,6 +46,7 @@ public:
 	void setDrawMode(LeftToolBar selection);
 	void addPanelWidget(PanelObject* panelObj);
 	PanelObject* getEnclosingShape(const QPoint& cursor);
+	void createGrid();
 
 signals:
 	void signalPanelObjectCreation(DrawType type, const QRect& rect);

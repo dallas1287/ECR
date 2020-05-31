@@ -49,6 +49,9 @@ void DigitalComicReader::handleTopToolBarAction(TopToolBar selection)
         case TopToolBar::Drawing:
             m_pageWidget->setDrawing(m_pageWidget->isDrawing() ^ true);
             break;
+        case TopToolBar::CreateGrid:
+            handleGridCreation();
+            break;
         default:
             return;
     }
@@ -69,6 +72,11 @@ void DigitalComicReader::handleLeftToolBarAction(LeftToolBar selection)
             m_pageWidget->setDrawMode(selection);
         }
     }
+}
+
+void DigitalComicReader::handleGridCreation()
+{
+    m_pageWidget->createGrid();
 }
 
 /**************************************************************************************************

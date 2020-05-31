@@ -137,6 +137,18 @@ void ComicPageWidget::movePanel(const QPoint& curPos)
     m_editShape.pObj->getRectToEdit().moveTopLeft(moved_tl + delta);
 }
 
+void ComicPageWidget::createGrid()
+{
+    int hpanels = 3;
+    int vpanels = 3;
+    int padding = 10;
+    int panelWidth = (m_size.width() / hpanels) - ((hpanels + 1) * padding);
+    int panelHeight = (m_size.height() / vpanels) - ((vpanels + 1) * padding);
+    QSize panelSize(panelWidth, panelHeight);
+    m_cpHandler.createGrid(hpanels, panelWidth, vpanels, panelHeight, padding);
+    repaint();
+}
+
 /**************************************************************************************************
 **************************Mouse Events*************************************************************
 **************************************************************************************************/

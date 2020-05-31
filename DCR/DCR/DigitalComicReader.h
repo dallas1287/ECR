@@ -26,6 +26,7 @@ protected:
 private:
 	void handleTopToolBarAction(TopToolBar selection);
 	void handleLeftToolBarAction(LeftToolBar selection);
+	void handleGridCreation();
 
     Ui::DigitalComicReaderClass ui;
 	std::unique_ptr<ComicPageWidget> m_pageWidget;

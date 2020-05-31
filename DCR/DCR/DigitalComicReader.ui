@@ -528,6 +528,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionDrawMode"/>
+   <addaction name="actionCreateGrid"/>
   </widget>
   <widget class="QToolBar" name="leftToolBar">
    <property name="windowTitle">
@@ -626,6 +627,21 @@
    </property>
    <property name="toolTip">
     <string>enable draw mode</string>
+   </property>
+  </action>
+  <action name="actionCreateGrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../icons/drawGrid.png</normaloff>../../icons/drawGrid.png</iconset>
+   </property>
+   <property name="text">
+    <string>CreateGrid</string>
+   </property>
+   <property name="toolTip">
+    <string>create a grid</string>
    </property>
   </action>
  </widget>

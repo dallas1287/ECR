@@ -18,6 +18,7 @@ public:
 
 	void setSelected(PanelObject* panelObj);
 	PanelObject* getSelected() const { return m_selected; }
+	void createGrid(int numH, int width, int numV, int height, int padding);
 
 public slots:
 	void createPanelObject(DrawType mode, const QRect& rect);

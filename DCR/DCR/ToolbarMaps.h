@@ -5,17 +5,20 @@
 
 enum class TopToolBar : unsigned int
 {
-	Drawing
+	Drawing,
+	CreateGrid
 };
 
 const std::map<QString, TopToolBar> TopTBMap =
 {
-	{"Draw", TopToolBar::Drawing}
+	{"Draw", TopToolBar::Drawing},
+	{"CreateGrid", TopToolBar::CreateGrid}
 };
 
 const std::map<TopToolBar, QString> TopTBRevMap =
 {
-	{TopToolBar::Drawing, "Draw"}
+	{TopToolBar::Drawing, "Draw"},
+	{TopToolBar::CreateGrid, "CreateGrid"}
 };
 
 enum class LeftToolBar
