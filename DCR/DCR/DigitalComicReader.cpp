@@ -8,12 +8,10 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
     m_pageWidget.reset(new ComicPageWidget(this));
     ui.scrollArea->setWidget(m_pageWidget.get());
     ui.scrollArea->setBackgroundRole(QPalette::Dark);
-
     ui.topToolBar->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.leftToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
     connect(ui.topToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
     connect(ui.topToolBar, &QWidget::customContextMenuRequested, this, &DigitalComicReader::handleTopTBContextMenu);
-
 }
 
 DigitalComicReader::~DigitalComicReader()

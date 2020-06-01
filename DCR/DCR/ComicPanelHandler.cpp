@@ -25,19 +25,6 @@ ComicPanelHandler& ComicPanelHandler::operator=(const ComicPanelHandler& other)
     return *this;
 }
 
-void ComicPanelHandler::createPanelObject(DrawType mode, const QRect& rect)
-{
-    if(std::find_if(m_panelObjects.begin(), m_panelObjects.end(), 
-        [&](std::unique_ptr<PanelObject>& pObj) { return pObj->getRect() == rect && pObj->getDrawMode() == mode; }) == m_panelObjects.end())
-        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, mode, rect)));
-}
-
-void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj)
-{
-    if (panelObj && !panelObj->getGraphicPanel())
-        panelObj->createGraphicPanel();
-}
-
 void ComicPanelHandler::setSelected(PanelObject* selected)
 {
     for (std::unique_ptr<PanelObject>& p : m_panelObjects)
@@ -63,5 +50,26 @@ void ComicPanelHandler::createGrid(int numH, int width, int numV, int height, in
         }
         topleft = QPoint(hBorder, topleft.y() + height + vPadding);
     }
+}
 
+/**************************************************************************************************
+**************************Slots********************************************************************
+**************************************************************************************************/
+
+void ComicPanelHandler::createPanelObject(DrawType mode, const QRect& rect)
+{
+    if(std::find_if(m_panelObjects.begin(), m_panelObjects.end(), 
+        [&](std::unique_ptr<PanelObject>& pObj) { return pObj->getRect() == rect && pObj->getDrawMode() == mode; }) == m_panelObjects.end())
+        m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, mode, rect)));
+}
+
+void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj)
+{
+    if (panelObj && !panelObj->getGraphicPanel())
+        panelObj->createGraphicPanel();
+}
+
+void ComicPanelHandler::clearPage()
+{
+    m_panelObjects.clear();
 }

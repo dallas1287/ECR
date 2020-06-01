@@ -52,6 +52,9 @@ signals:
 	void signalPanelObjectCreation(DrawType type, const QRect& rect);
 	void signalGraphicPanelCreation(PanelObject* pObj);
 
+public slots:
+	void handleCtxMenuRequested(const QPoint& pos);
+
 protected:
 	virtual void paintEvent(QPaintEvent* event) override;
 

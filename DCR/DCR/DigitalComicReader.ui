@@ -488,7 +488,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>822</width>
+         <width>804</width>
          <height>806</height>
         </rect>
        </property>
@@ -551,6 +551,9 @@
   <widget class="QDockWidget" name="dockPropsWidget">
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>Properties</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>

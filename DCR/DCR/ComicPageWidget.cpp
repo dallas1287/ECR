@@ -10,9 +10,10 @@ ComicPageWidget::ComicPageWidget(QWidget* parent, Qt::WindowFlags f) : QWidget(p
     setLayout(&m_layout);
 
     setFixedSize(m_size);
-
     setFocusPolicy(Qt::StrongFocus);
+    setContextMenuPolicy(Qt::CustomContextMenu);
 
+    connect(this, &QWidget::customContextMenuRequested, this, &ComicPageWidget::handleCtxMenuRequested);
     connect(this, &ComicPageWidget::signalPanelObjectCreation, &m_cpHandler, &ComicPanelHandler::createPanelObject);
     connect(this, &ComicPageWidget::signalGraphicPanelCreation, &m_cpHandler, &ComicPanelHandler::createGraphicPanel);
 }
@@ -144,6 +145,23 @@ void ComicPageWidget::createGrid(int numH, int numV, int hPadding, int vPadding,
     QSize panelSize(panelWidth, panelHeight);
     m_cpHandler.createGrid(numH, panelWidth, numV, panelHeight, hPadding, vPadding, hBorder, vBorder);
     repaint();
+}
+
+/**************************************************************************************************
+**************************Slots********************************************************************
+**************************************************************************************************/
+
+void ComicPageWidget::handleCtxMenuRequested(const QPoint& pos)
+{
+    QMenu* ctxMenu = new QMenu(this);
+    QAction clearPage(tr("Clear Page"));
+    QAction setIV(tr("Set Image/Video"));
+    ctxMenu->addAction(&clearPage);
+    ctxMenu->addAction(&setIV);
+
+    connect(&clearPage, &QAction::triggered, &m_cpHandler, &ComicPanelHandler::clearPage);
+    ctxMenu->exec(mapToGlobal(pos));
+    delete ctxMenu;
 }
 
 /**************************************************************************************************
