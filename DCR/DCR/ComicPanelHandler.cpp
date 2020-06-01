@@ -49,9 +49,9 @@ void ComicPanelHandler::setSelected(PanelObject* selected)
     m_selected = selected;
 }
 
-void ComicPanelHandler::createGrid(int numH, int width, int numV, int height, int padding)
+void ComicPanelHandler::createGrid(int numH, int width, int numV, int height, int hPadding, int vPadding, int hBorder, int vBorder)
 {
-    QPoint topleft(padding, padding);
+    QPoint topleft(hBorder, vBorder);
     QSize pSize(width, height);
 
     for (int i = 0; i < numV; ++i)
@@ -59,9 +59,9 @@ void ComicPanelHandler::createGrid(int numH, int width, int numV, int height, in
         for (int j = 0; j < numH; ++j)
         {
             createPanelObject(DrawType::Rectangle, QRect(topleft, pSize));
-            topleft += QPoint(padding + width, 0);
+            topleft += QPoint(hPadding + width, 0);
         }
-        topleft = QPoint(padding, topleft.y() + height + padding);
+        topleft = QPoint(hBorder, topleft.y() + height + vPadding);
     }
 
 }

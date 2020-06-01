@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1103</width>
+    <width>1146</width>
     <height>903</height>
    </rect>
   </property>
@@ -461,6 +461,9 @@
   <property name="windowTitle">
    <string>DigitalComicReader</string>
   </property>
+  <property name="toolTip">
+   <string/>
+  </property>
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
@@ -485,7 +488,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1048</width>
+         <width>822</width>
          <height>806</height>
         </rect>
        </property>
@@ -505,7 +508,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1103</width>
+     <width>1146</width>
      <height>22</height>
     </rect>
    </property>
@@ -544,6 +547,148 @@
    <addaction name="actionDrawRect"/>
    <addaction name="actionDrawCircle"/>
    <addaction name="actionDrawEllipse"/>
+  </widget>
+  <widget class="QDockWidget" name="dockPropsWidget">
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0" colspan="2">
+      <widget class="QTabWidget" name="tabWidget">
+       <widget class="QWidget" name="gcTab">
+        <attribute name="title">
+         <string>GridCreator</string>
+        </attribute>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelNumPanelsH">
+           <property name="text">
+            <string>Horizontal Panel Count</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEditNumPanelsH">
+           <property name="text">
+            <string>3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="labelNumPanelsV">
+           <property name="text">
+            <string>Vertical Panel Count</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="lineEditNumPanelsV">
+           <property name="text">
+            <string>3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="labelBorderH">
+           <property name="text">
+            <string>Horizontal Border</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="lineEditBorderH">
+           <property name="toolTip">
+            <string>Enter Value from -1 to 10000</string>
+           </property>
+           <property name="text">
+            <string>10</string>
+           </property>
+           <property name="placeholderText">
+            <string>Enter Value from -1 to 10000</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="labelBorderV">
+           <property name="text">
+            <string>Vertical Border</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="lineEditBorderV">
+           <property name="toolTip">
+            <string>Enter Value from -1 to 10000</string>
+           </property>
+           <property name="text">
+            <string>10</string>
+           </property>
+           <property name="placeholderText">
+            <string>Enter Value from -1 to 10000</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="labelPaddingH">
+           <property name="text">
+            <string>Horizontal Panel Padding</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="lineEditPPH">
+           <property name="toolTip">
+            <string>Enter Value from -1 to 10000</string>
+           </property>
+           <property name="text">
+            <string>5</string>
+           </property>
+           <property name="placeholderText">
+            <string>Enter Value from -1 to 10000</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="labelPaddingV">
+           <property name="text">
+            <string>Vertical Panel Padding</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="lineEditPPV">
+           <property name="toolTip">
+            <string>Enter Value from -1 to 10000</string>
+           </property>
+           <property name="text">
+            <string>5</string>
+           </property>
+           <property name="placeholderText">
+            <string>Enter Value from -1 to 10000</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>Tab 2</string>
+        </attribute>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actionDrawPolygon">
    <property name="checkable">

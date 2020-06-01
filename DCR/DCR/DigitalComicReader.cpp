@@ -10,10 +10,10 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
     ui.scrollArea->setBackgroundRole(QPalette::Dark);
 
     ui.topToolBar->setContextMenuPolicy(Qt::CustomContextMenu);
-
     connect(ui.leftToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
     connect(ui.topToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
     connect(ui.topToolBar, &QWidget::customContextMenuRequested, this, &DigitalComicReader::handleTopTBContextMenu);
+
 }
 
 DigitalComicReader::~DigitalComicReader()
@@ -108,7 +108,13 @@ void DigitalComicReader::onCreateGridCtxMenu()
 
 void DigitalComicReader::handleGridCreation()
 {
-    m_pageWidget->createGrid();
+    int numH = ui.lineEditNumPanelsH->text().toInt();
+    int numV = ui.lineEditNumPanelsV->text().toInt();
+    int hPadding = ui.lineEditPPH->text().toInt();
+    int vPadding = ui.lineEditPPV->text().toInt();
+    int hBorder = ui.lineEditBorderH->text().toInt();
+    int vBorder = ui.lineEditBorderV->text().toInt();
+    m_pageWidget->createGrid(numH, numV, hPadding, vPadding, hBorder, vBorder);
 }
 
 /**************************************************************************************************
