@@ -1,12 +1,17 @@
 #include "GraphicsObject.h"
 
-GraphicsObject::GraphicsObject() : m_ebo(QOpenGLBuffer(QOpenGLBuffer::IndexBuffer))
+GraphicsObject::GraphicsObject(QOpenGLWidget* parent) : m_parent(parent), m_ebo(QOpenGLBuffer(QOpenGLBuffer::IndexBuffer))
 {
 	initializeOpenGLFunctions();
 	//initialize arrays and attributes
 	Vao();
 	Vbo();
 	Ebo();
+}
+
+GraphicsObject::GraphicsObject(const GraphicsObject& other)
+{
+	//TODO: Implement this
 }
 
 GraphicsObject::~GraphicsObject()
@@ -37,10 +42,16 @@ QOpenGLBuffer GraphicsObject::Ebo()
 void GraphicsObject::initialize()
 {
 	initShaders("base_vs.glsl", "base_frag.glsl");
-	//initTexture("../harley.jpg");
 	initTexture("../scene5.png");
-	//createQuad(m_vertexData, m_indices);
 	createTexInvertedQuad(m_vertexData, m_indices);
+	setupBuffers();
+}
+
+void GraphicsObject::initialize(const QString& path)
+{
+	initShaders("base_vs.glsl", "base_frag.glsl");
+	initTexture(path);
+	m_inverted ? createTexInvertedQuad(m_vertexData, m_indices) : createQuad(m_vertexData, m_indices);
 	setupBuffers();
 }
 

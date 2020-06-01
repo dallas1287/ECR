@@ -76,6 +76,8 @@ static void createQuad(std::vector<VertexData>& vertices, std::vector<GLushort>&
 
 static void createTexInvertedQuad(std::vector<VertexData>& vertices, std::vector<GLushort>& indices)
 {
+	vertices.clear();
+	indices.clear();
 	vertices.insert(vertices.end(), QuadTemplateTexInverted.begin(), QuadTemplateTexInverted.end());
 	indices.insert(indices.end(), QuadIndices.begin(), QuadIndices.end());
 }

@@ -63,10 +63,10 @@ void ComicPanelHandler::createPanelObject(DrawType mode, const QRect& rect)
         m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, mode, rect)));
 }
 
-void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj)
+void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj, const QString& path)
 {
     if (panelObj && !panelObj->getGraphicPanel())
-        panelObj->createGraphicPanel();
+        panelObj->createGraphicPanel(path);
 }
 
 void ComicPanelHandler::clearPage()

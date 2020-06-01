@@ -22,7 +22,7 @@ public:
 
 public slots:
 	void createPanelObject(DrawType mode, const QRect& rect);
-	void createGraphicPanel(PanelObject* panelObj);
+	void createGraphicPanel(PanelObject* panelObj, const QString& path);
 	void clearPage();
 
 private:

@@ -25,7 +25,7 @@ public:
 
 	void setIndex(int index) { m_index = index; }
 	int getIndex() { return m_index; }
-	void createGraphicPanel();
+	void createGraphicPanel(const QString& path);
 
 	bool isSelected() const { return m_isSelected; }
 	void setSelected(bool state = true) { m_isSelected = state; }

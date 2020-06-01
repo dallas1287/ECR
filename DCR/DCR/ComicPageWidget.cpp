@@ -15,7 +15,6 @@ ComicPageWidget::ComicPageWidget(QWidget* parent, Qt::WindowFlags f) : QWidget(p
 
     connect(this, &QWidget::customContextMenuRequested, this, &ComicPageWidget::handleCtxMenuRequested);
     connect(this, &ComicPageWidget::signalPanelObjectCreation, &m_cpHandler, &ComicPanelHandler::createPanelObject);
-    connect(this, &ComicPageWidget::signalGraphicPanelCreation, &m_cpHandler, &ComicPanelHandler::createGraphicPanel);
 }
 
 ComicPageWidget::ComicPageWidget(const ComicPageWidget& other)
@@ -156,12 +155,33 @@ void ComicPageWidget::handleCtxMenuRequested(const QPoint& pos)
     QMenu* ctxMenu = new QMenu(this);
     QAction clearPage(tr("Clear Page"));
     QAction setIV(tr("Set Image/Video"));
+    QAction settings(tr("Settings"));
     ctxMenu->addAction(&clearPage);
-    ctxMenu->addAction(&setIV);
+    
+    PanelObject* selected = getEnclosingShape(pos);
+    if (selected)
+    {
+        ctxMenu->addAction(&setIV);
+        m_cpHandler.setSelected(selected);
+    }
+    ctxMenu->addAction(&settings);
 
     connect(&clearPage, &QAction::triggered, &m_cpHandler, &ComicPanelHandler::clearPage);
+    connect(&setIV, &QAction::triggered, this, &ComicPageWidget::launchImageSelectDialog);
+    connect(&settings, &QAction::triggered, this, &ComicPageWidget::launchSettingsDialog);
     ctxMenu->exec(mapToGlobal(pos));
     delete ctxMenu;
+}
+
+void ComicPageWidget::launchImageSelectDialog()
+{
+    QString path = QFileDialog::getOpenFileName(this, tr("Open Image or Video"), QString(), tr("Images (*.png *.jpg *.bmp)"));
+    m_cpHandler.createGraphicPanel(m_cpHandler.getSelected(), path);
+}
+
+void ComicPageWidget::launchSettingsDialog()
+{
+
 }
 
 /**************************************************************************************************
@@ -236,5 +256,4 @@ void ComicPageWidget::mouseDoubleClickEvent(QMouseEvent* event)
         return;
 
     m_cpHandler.setSelected(panelObj);
-    emit signalGraphicPanelCreation(panelObj);
 }

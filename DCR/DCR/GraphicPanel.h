@@ -14,11 +14,13 @@ class GraphicPanel : public QOpenGLWidget, protected QOpenGLExtraFunctions
 {
 	Q_OBJECT
 public:
-	GraphicPanel(QWidget* parent, PanelObject* controller, Qt::WindowFlags flags = Qt::WindowFlags());
+	GraphicPanel(QWidget* parent, PanelObject* controller, const QString& filePath = QString(), Qt::WindowFlags flags = Qt::WindowFlags());
 	GraphicPanel(const GraphicPanel& other);
 	virtual ~GraphicPanel();
 
 	GraphicPanel& operator=(const GraphicPanel& other);
+
+	void loadFrame(const QString& path);
 
 protected:
 	//virtual void wheelEvent(QWheelEvent* event);
@@ -36,5 +38,6 @@ protected:
 
 	std::unique_ptr<GraphicsObject> m_gObj;
 	PanelObject* m_controller = nullptr;
+	QString m_filePath;
 
 };
