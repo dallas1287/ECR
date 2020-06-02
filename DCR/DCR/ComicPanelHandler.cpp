@@ -63,7 +63,12 @@ void ComicPanelHandler::createPanelObject(DrawType mode, const QRect& rect)
         m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, mode, rect)));
 }
 
-void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj, const QString& path)
+void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj)
+{
+    createGPWithPath(panelObj, QString());
+}
+
+void ComicPanelHandler::createGPWithPath(PanelObject* panelObj, const QString& path)
 {
     if (panelObj && !panelObj->getGraphicPanel())
         panelObj->createGraphicPanel(path);

@@ -110,9 +110,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ComicPageWidget.cpp" />
+    <ClCompile Include="PageDisplayWidget.cpp" />
     <ClCompile Include="ComicPanelHandler.cpp" />
     <ClCompile Include="DrawHandler.cpp" />
+    <ClCompile Include="PageEditForm.cpp" />
     <ClCompile Include="PanelObject.cpp" />
     <QtRcc Include="DigitalComicReader.qrc" />
     <QtUic Include="DigitalComicReader.ui" />
@@ -127,9 +128,10 @@
     <QtMoc Include="GraphicPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PageEditForm.h" />
     <ClInclude Include="ToolbarMaps.h" />
     <QtMoc Include="ComicPanelHandler.h" />
-    <QtMoc Include="ComicPageWidget.h" />
+    <QtMoc Include="PageDisplayWidget.h" />
     <ClInclude Include="ComicPanelLayout.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="DrawHandler.h" />

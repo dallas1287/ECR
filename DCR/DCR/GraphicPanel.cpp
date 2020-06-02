@@ -24,7 +24,7 @@ GraphicPanel& GraphicPanel::operator=(const GraphicPanel& other)
 {
 	m_controller = other.m_controller;
 	setParent(other.parentWidget());
-	m_gObj.reset(new GraphicsObject(this));
+	m_gObj.reset(new GraphicsObject());
 	return *this;
 }
 
@@ -32,9 +32,10 @@ void GraphicPanel::initializeGL()
 {
 	initializeOpenGLFunctions();
 	setBackground(QVector4D()); //black
-	m_gObj.reset(new GraphicsObject(this));
+	m_gObj.reset(new GraphicsObject());
 	if (m_gObj.get())
-		m_gObj->initialize(m_filePath);
+		m_gObj->initialize();
+	loadFrame(m_filePath);
 }
 
 void GraphicPanel::loadFrame(const QString& path)
@@ -43,7 +44,7 @@ void GraphicPanel::loadFrame(const QString& path)
 	int width = 0;
 	int height = 0;
 	unsigned char* data = nullptr;
-	ErrorCode ret = mc.loadFrame(path.toStdString().c_str(), width, height, &data);
+	ErrorCode ret = mc.loadFrame("../EeveeRender1.mp4", width, height, &data);
 
 	if (ret != ErrorCode::SUCCESS || width == 0 || height == 0)
 	{
@@ -52,11 +53,11 @@ void GraphicPanel::loadFrame(const QString& path)
 		return;
 	}
 
-	if (!m_gObj.get())
-	{
-		m_gObj.reset(new GraphicsObject(this));
-		m_gObj->initialize();
-	}
+	//if (!m_gObj.get())
+	//{
+	//	m_gObj.reset(new GraphicsObject());
+	//	m_gObj->initialize();
+	//}
 
 	if (!m_gObj->resetTexture(width, height, (void*)data))
 		qDebug() << "Texture data not set";
@@ -83,8 +84,8 @@ void GraphicPanel::panelPaint()
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if(m_gObj)
-		m_gObj->Draw();
+	//if(m_gObj)
+	//	m_gObj->Draw();
 	
 	//QPen pen(QColor(255, 0, 255));
 	//pen.setWidth(10);

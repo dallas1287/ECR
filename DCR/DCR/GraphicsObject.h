@@ -14,7 +14,7 @@ typedef std::vector<GLushort> IndexPool;
 class GraphicsObject : protected QOpenGLExtraFunctions
 {
 public:
-	GraphicsObject(QOpenGLWidget* parent);
+	GraphicsObject();
 	GraphicsObject(const GraphicsObject& other);
 	virtual ~GraphicsObject();
 	QOpenGLShaderProgram* ShaderProgram() const { return m_program.get(); }
@@ -54,13 +54,12 @@ protected:
 	std::vector<GLushort> m_indices;
 
 private:
-	QOpenGLWidget* m_parent;
 	std::unique_ptr<QOpenGLShaderProgram> m_program;
 	QOpenGLVertexArrayObject m_vao;
 	QOpenGLBuffer m_vbo, m_ebo;
 	std::unique_ptr<QOpenGLTexture> m_texture;
 	ShaderAttributes m_shaderAttributes;
 	QMatrix4x4 m_modelMatrix;
-	bool m_inverted = true;
+	bool m_inverted = false;
 };
 

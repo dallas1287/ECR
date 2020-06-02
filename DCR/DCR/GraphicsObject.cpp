@@ -1,6 +1,6 @@
 #include "GraphicsObject.h"
 
-GraphicsObject::GraphicsObject(QOpenGLWidget* parent) : m_parent(parent), m_ebo(QOpenGLBuffer(QOpenGLBuffer::IndexBuffer))
+GraphicsObject::GraphicsObject() : m_ebo(QOpenGLBuffer(QOpenGLBuffer::IndexBuffer))
 {
 	initializeOpenGLFunctions();
 	//initialize arrays and attributes
@@ -42,7 +42,7 @@ QOpenGLBuffer GraphicsObject::Ebo()
 void GraphicsObject::initialize()
 {
 	initShaders("base_vs.glsl", "base_frag.glsl");
-	initTexture("../scene5.png");
+	initTexture("../Closeup2.png");
 	createTexInvertedQuad(m_vertexData, m_indices);
 	setupBuffers();
 }

@@ -19,10 +19,11 @@ public:
 	void setSelected(PanelObject* panelObj);
 	PanelObject* getSelected() const { return m_selected; }
 	void createGrid(int numH, int width, int numV, int height, int hPadding, int vPadding, int hBorder, int vBorder);
+	void createGPWithPath(PanelObject* panelObj, const QString& path);
 
 public slots:
 	void createPanelObject(DrawType mode, const QRect& rect);
-	void createGraphicPanel(PanelObject* panelObj, const QString& path);
+	void createGraphicPanel(PanelObject* panelObj);
 	void clearPage();
 
 private:

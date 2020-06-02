@@ -25,5 +25,5 @@ void PanelObject::createGraphicPanel(const QString& path)
 {
 	m_gPanel.reset(new GraphicPanel(m_owner, this, path));
 	m_gPanel->setGeometry(m_rect);
-	((ComicPageWidget*)m_owner)->addPanelWidget(this);
+	((PageDisplayWidget*)m_owner)->addPanelWidget(this);
 }

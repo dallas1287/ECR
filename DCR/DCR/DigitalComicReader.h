@@ -2,12 +2,8 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_DigitalComicReader.h"
-#include "ComicPageWidget.h"
-#include "GraphicPanel.h"
-#include "PanelObject.h"
-#include "DrawHandler.h"
-#include "ComicPanelHandler.h"
-#include "ComicPanelLayout.h"
+#include "PageDisplayWidget.h"
+#include "PageEditForm.h"
 
 class DigitalComicReader : public QMainWindow
 {
@@ -31,5 +27,6 @@ private:
 	void handleGridCreation();
 
     Ui::DigitalComicReaderClass ui;
-	std::unique_ptr<ComicPageWidget> m_pageWidget;
+	std::unique_ptr<PageDisplayWidget> m_pageWidget;
+	std::unique_ptr<PageEditForm> m_pageEdit;
 };
