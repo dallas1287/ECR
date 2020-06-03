@@ -176,7 +176,7 @@ void PageDisplayWidget::handleCtxMenuRequested(const QPoint& pos)
 
 void PageDisplayWidget::launchImageSelectDialog()
 {
-    QString path = QFileDialog::getOpenFileName(this, tr("Open Image or Video"), QString(), tr("Images (*.png *.jpg *.bmp)"));
+    QString path = QFileDialog::getOpenFileName(this, tr("Open Image or Video"), QString(), tr("Images (*.png *.jpg *.bmp *.mp4)"));
     if(!path.isEmpty())
         m_cpHandler.createGPWithPath(m_cpHandler.getSelected(), path);
 }

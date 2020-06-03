@@ -8,7 +8,6 @@ int main(int argc, char *argv[])
     _CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 
-    QCoreApplication::setAttribute(Qt::AA_UseSoftwareOpenGL, true);
     QApplication a(argc, argv);
     DigitalComicReader w;
     //w.centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
