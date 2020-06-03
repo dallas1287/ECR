@@ -53,12 +53,6 @@ void GraphicPanel::loadFrame(const QString& path)
 		return;
 	}
 
-	//if (!m_gObj.get())
-	//{
-	//	m_gObj.reset(new GraphicsObject());
-	//	m_gObj->initialize();
-	//}
-
 	if (!m_gObj->resetTexture(width, height, (void*)data))
 		qDebug() << "Texture data not set";
 
@@ -84,22 +78,8 @@ void GraphicPanel::panelPaint()
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//if(m_gObj)
-	//	m_gObj->Draw();
-	
-	//QPen pen(QColor(255, 0, 255));
-	//pen.setWidth(10);
-	//painter.setPen(pen);
-	//pen.setStyle(Qt::PenStyle::SolidLine);
-
-	//QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
-
-	//painter.beginNativePainting();
-
-	//QRect geo(QPoint(0,0), QSize(50, 50));
-	//painter.fillRect(geo, brush);
-	//painter.drawRect(geo);
-	//painter.endNativePainting();
+	if(m_gObj)
+		m_gObj->Draw();
 
 	painter.end();
 }
