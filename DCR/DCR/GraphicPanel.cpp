@@ -44,7 +44,7 @@ void GraphicPanel::loadFrame(const QString& path)
 	int width = 0;
 	int height = 0;
 	unsigned char* data = nullptr;
-	ErrorCode ret = mc.loadFrame("../EeveeRender1.mp4", width, height, &data);
+	ErrorCode ret = mc.loadFrame(path.toStdString().c_str(), width, height, &data);
 
 	if (ret != ErrorCode::SUCCESS || width == 0 || height == 0)
 	{
