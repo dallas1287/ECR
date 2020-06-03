@@ -58,9 +58,12 @@ void ComicPanelHandler::createGrid(int numH, int width, int numV, int height, in
 
 void ComicPanelHandler::createPanelObject(DrawType mode, const QRect& rect)
 {
-    if(std::find_if(m_panelObjects.begin(), m_panelObjects.end(), 
-        [&](std::unique_ptr<PanelObject>& pObj) { return pObj->getRect() == rect && pObj->getDrawMode() == mode; }) == m_panelObjects.end())
+    if (ComicPanelHandler::isRectMinSize(rect) && 
+        std::find_if(m_panelObjects.begin(), m_panelObjects.end(),
+            [&](std::unique_ptr<PanelObject>& pObj) { return pObj->getRect() == rect && pObj->getDrawMode() == mode; }) == m_panelObjects.end())
+    {
         m_panelObjects.emplace_back(std::unique_ptr<PanelObject>(new PanelObject(m_owner, mode, rect)));
+    }
 }
 
 void ComicPanelHandler::createGraphicPanel(PanelObject* panelObj)

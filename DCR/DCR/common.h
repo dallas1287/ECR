@@ -2,6 +2,9 @@
 #include <QWidget>
 #include <QRect>
 
+const int MinRectWidth = 10;
+const int MinRectHeight = 10;
+
 enum class DrawType : unsigned int
 {
 	Polygon,

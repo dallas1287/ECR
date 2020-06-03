@@ -208,7 +208,7 @@ void PageDisplayWidget::mouseMoveEvent(QMouseEvent* event)
 
 void PageDisplayWidget::mousePressEvent(QMouseEvent* event)
 {
-    if (!m_drawing)
+    if (!m_drawing || event->button() == Qt::RightButton)
         return;
 
     //handle editing
@@ -241,7 +241,7 @@ void PageDisplayWidget::mousePressEvent(QMouseEvent* event)
 
 void PageDisplayWidget::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (!m_drawing)
+    if (!m_drawing || event->button() == Qt::RightButton)
         return;
 
     if (m_movingPanel)
