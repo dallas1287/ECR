@@ -136,6 +136,7 @@ void PageDisplayWidget::movePanel(const QPoint& curPos)
     QPoint delta(hmovement, vmovement);
     QPoint moved_tl = m_editShape.pObj->getRect().topLeft();
     m_editShape.pObj->getRectToEdit().moveTopLeft(moved_tl + delta);
+    m_editShape.pObj->getGraphicPanel()->setGeometry(m_editShape.pObj->getRect());
 }
 
 void PageDisplayWidget::createGrid(int numH, int numV, int hPadding, int vPadding, int hBorder, int vBorder)
