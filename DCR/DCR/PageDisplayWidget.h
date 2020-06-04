@@ -41,8 +41,7 @@ public:
 
 	bool isDrawing() { return m_drawing; }
 	void setDrawing(bool state) { m_drawing = state; }
-	DrawType getDrawMode() { return m_drawHandler.getDrawMode(); }
-	void setDrawMode(DrawType selection); 
+	DrawType getDrawMode() { return m_drawHandler.getDrawMode(); } 
 	void setDrawMode(LeftToolBar selection);
 	void addPanelWidget(PanelObject* panelObj);
 	PanelObject* getEnclosingShape(const QPoint& cursor);
@@ -71,11 +70,10 @@ private:
 	QRect getDrawnRect() const;
 
 	void movePanel(const QPoint& curPos);
-	void movePanel(const QPoint& curPos, PanelObject* pObj);
 
 	ComicPanelLayout m_layout;
 	ComicPanelHandler m_cpHandler = ComicPanelHandler(this);
-	DrawHandler m_drawHandler;
+	DrawHandler m_drawHandler = DrawHandler(this);
 
 	QSize m_size = QSize(1080, 1920);
 

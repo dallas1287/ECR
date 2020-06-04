@@ -4,6 +4,10 @@ DrawHandler::DrawHandler()
 {
 }
 
+DrawHandler::DrawHandler(QPaintDevice* device) : m_device(device)
+{
+}
+
 DrawHandler::DrawHandler(const DrawHandler& other)
 {
 }
@@ -17,122 +21,103 @@ DrawHandler& DrawHandler::operator=(const DrawHandler& other)
 	return *this;
 }
 
-void DrawHandler::draw(QPainter& painter, DrawType mode, const QRect& rect)
+void DrawHandler::draw(DrawType mode, const QRect& rect)
 {
+	if (!m_painter.begin(m_device))
+	{
+		qDebug() << "Painter failed to begin";
+		return;
+	}
+
+	m_painter.setRenderHint(QPainter::Antialiasing, true);
+	m_penSettings.setupPen(m_pen);
+	m_painter.setPen(m_pen);
+	m_painter.setBrush(TransparentBrush);
+
 	switch (mode)
 	{
 		case DrawType::Polygon:
-			drawPolygon(painter);
+			drawPolygon();
 			break;
 		case DrawType::Rectangle:
-			drawRectangle(painter, rect);
+			drawRectangle(rect);
 			break;
 		case DrawType::Circle:
-			drawCircle(painter, rect);
+			drawCircle(rect);
 			break;
 		case DrawType::Ellipse:
-			drawEllipse(painter, rect);
+			drawEllipse(rect);
 			break;
 		default:
-			return;
+			break;
 	}
+
+	m_painter.end();
 }
 
-void DrawHandler::draw(QPainter& painter, const QRect& rect)
+void DrawHandler::draw(const QRect& rect)
 {
-	draw(painter, m_mode, rect);
+	draw(m_mode, rect);
 }
 
-void DrawHandler::draw(QPainter& painter, PanelObjectPool& pObjs)
+void DrawHandler::draw(PanelObjectPool& pObjs)
 {
 	for (auto& p : pObjs)
-		draw(painter, p->getDrawMode(), p->getRect());
+		draw(p->getDrawMode(), p->getRect());
 }
 
-void DrawHandler::drawPolygon(QPainter& painter)
+void DrawHandler::drawPolygon()
 {
 	if (m_points.empty())
 		return;
 
-	QPen pen;
-	pen.setStyle(Qt::PenStyle::SolidLine);
-	painter.setRenderHint(QPainter::Antialiasing, true);
-	pen.setColor(QColor(255, 0, 0));
-	pen.setWidth(5);
-	painter.setPen(pen);
-
-	painter.drawPolyline(m_points.data(), m_points.size());
+	m_painter.drawPolyline(m_points.data(), m_points.size());
 }
 
-void DrawHandler::drawRectangle(QPainter& painter, const QRect& rect)
+void DrawHandler::drawRectangle(const QRect& rect)
 {
-	QPen pen;
-	pen.setStyle(Qt::PenStyle::SolidLine);
-	painter.setRenderHint(QPainter::Antialiasing, true);
-	pen.setColor(QColor(255, 0, 0));
-	pen.setWidth(5);
-	painter.setPen(pen);
-
-	QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
-
-	painter.fillRect(rect, brush);
-	painter.drawRect(rect);
+	m_painter.fillRect(rect, m_painter.brush());
+	m_painter.drawRect(rect);
 }
 
-void DrawHandler::drawCircle(QPainter& painter, const QRect& rect)
+void DrawHandler::drawCircle(const QRect& rect)
 {
 	int max = std::max(rect.width(), rect.height());
 	QRect circle(rect.topLeft(), QSize(max, max));
 
-	QPen pen;
-	pen.setStyle(Qt::PenStyle::SolidLine);
-	painter.setRenderHint(QPainter::Antialiasing, true);
-	pen.setColor(QColor(255, 0, 0));
-	pen.setWidth(5);
-	painter.setPen(pen);
-
-	QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
-
-	painter.fillRect(circle, brush);
-	painter.drawEllipse(circle);
+	m_painter.fillRect(circle, m_painter.brush());
+	m_painter.drawEllipse(circle);
 }
 
-void DrawHandler::drawEllipse(QPainter& painter, const QRect& rect)
+void DrawHandler::drawEllipse(const QRect& rect)
 {
-	QPen pen;
-	pen.setStyle(Qt::PenStyle::SolidLine);
-	painter.setRenderHint(QPainter::Antialiasing, true);
-	pen.setColor(QColor(255, 0, 0));
-	pen.setWidth(5);
-	painter.setPen(pen);
-
-	QBrush brush(QColor(0, 0, 0, 0)); //fill transparent
-
-	painter.fillRect(rect, brush);
-	painter.drawEllipse(rect);
+	m_painter.fillRect(rect, m_painter.brush());
+	m_painter.drawEllipse(rect);
 }
 
-void DrawHandler::drawBackground(QPainter& painter, const QSize& pageSize)
+void DrawHandler::drawBackground(const QSize& pageSize)
 {
+	m_painter.begin(m_device);
 	QPen pen;
 	pen.setColor(QColor(0, 0, 0));
-    pen.setWidth(3);
-    painter.setPen(pen);
+	pen.setWidth(3);
+	m_painter.setPen(pen);
     QRect r(QPoint(0, 0), pageSize);
     QBrush brush(QColor(255, 255, 255)); //fill white background
-    painter.fillRect(r, brush);
-    painter.drawRect(r);
+    m_painter.fillRect(r, brush);
+    m_painter.drawRect(r);
+	m_painter.end();
 }
 
-void DrawHandler::drawSelected(QPainter& painter, PanelObject* selected)
+void DrawHandler::drawSelected(PanelObject* selected)
 {
 	if (selected)
 	{
 		QPen pen;
 		pen.setColor(QColor(255, 255, 0));
 		pen.setWidth(10);
-		painter.setPen(pen);
-		painter.fillRect(selected->getRect(), TransparentBrush);
-		painter.drawRect(selected->getRect());
+		m_painter.setPen(pen);
+		m_painter.fillRect(selected->getRect(), TransparentBrush);
+		m_painter.drawRect(selected->getRect());
 	}
 }

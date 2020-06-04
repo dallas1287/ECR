@@ -16,6 +16,7 @@ PageDisplayWidget::PageDisplayWidget(QWidget* parent, Qt::WindowFlags f) : QWidg
     connect(this, &QWidget::customContextMenuRequested, this, &PageDisplayWidget::handleCtxMenuRequested);
     connect(this, &PageDisplayWidget::signalPanelObjectCreation, &m_cpHandler, &ComicPanelHandler::createPanelObject);
     connect(this, &PageDisplayWidget::signalGraphicPanelCreation, &m_cpHandler, &ComicPanelHandler::createGraphicPanel);
+    m_drawHandler.setPanelHandler(&m_cpHandler);
 }
 
 PageDisplayWidget::PageDisplayWidget(const PageDisplayWidget& other)
@@ -24,12 +25,6 @@ PageDisplayWidget::PageDisplayWidget(const PageDisplayWidget& other)
 
 PageDisplayWidget::~PageDisplayWidget()
 {
-}
-
-void PageDisplayWidget::setDrawMode(DrawType selection)
-{
-    if (selection >= DrawType::Polygon && selection <= DrawType::Ellipse) 
-        m_drawHandler.setDrawMode(selection); 
 }
 
 //this is wild, but to convert the toolbar enum to the drawtype enum, it converts it to the underlying type of int,
@@ -42,25 +37,19 @@ void PageDisplayWidget::setDrawMode(LeftToolBar selection)
 
 void PageDisplayWidget::paintEvent(QPaintEvent* event)
 {
-    QPainter painter(this);
-
-    QPen pen;
-    pen.setStyle(Qt::PenStyle::SolidLine);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
     //draw background
-    m_drawHandler.drawBackground(painter, m_size);
+    m_drawHandler.drawBackground(m_size);
 
     //draw selected
-    m_drawHandler.drawSelected(painter, m_cpHandler.getSelected());
+    m_drawHandler.drawSelected(m_cpHandler.getSelected());
 
     //draw current
     if (m_movingPanel)
-        m_drawHandler.draw(painter, m_editShape.pObj->getRect());
+        m_drawHandler.draw(m_editShape.pObj->getRect());
     else if(m_drawing)
-        m_drawHandler.draw(painter, getDrawnRect());
+        m_drawHandler.draw(getDrawnRect());
 
-    m_drawHandler.draw(painter, m_cpHandler.panelObjects());
+    m_drawHandler.draw(m_cpHandler.panelObjects());
 }
 
 QRect PageDisplayWidget::getDrawnRect(const QPoint& start, const QPoint& cur) const

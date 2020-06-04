@@ -31,7 +31,5 @@ private:
 	QWidget* m_owner = nullptr;
 	PanelObjectPool m_panelObjects;
 	PanelObject* m_selected = nullptr;
-
-
 };
 
