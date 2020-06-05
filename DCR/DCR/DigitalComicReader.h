@@ -26,6 +26,6 @@ private:
 	void handleGridCreation();
 
     Ui::DigitalComicReaderClass ui;
-	std::unique_ptr<PageDisplayWidget> m_pageWidget;
-	std::unique_ptr<PageEditForm> m_pageEdit;
+	PageDisplayWidget* m_pageWidget = nullptr;
+	QWidget* m_formHolderWidget = nullptr;
 };

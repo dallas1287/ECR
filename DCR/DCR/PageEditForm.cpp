@@ -1,6 +1,6 @@
 #include "PageEditForm.h"
 
-PageEditForm::PageEditForm(QWidget* parent, Qt::WindowFlags f) : QWidget(parent, f)
+PageEditForm::PageEditForm() : QWidget()
 {
 	//create header and layout
 	m_button.reset(new QPushButton("v"));

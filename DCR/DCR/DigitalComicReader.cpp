@@ -5,17 +5,21 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    m_pageWidget.reset(new PageDisplayWidget(this));
-    ui.scrollArea->setWidget(m_pageWidget.get());
+    m_pageWidget = new PageDisplayWidget(this);
+    ui.scrollArea->setWidget(m_pageWidget);
     ui.scrollArea->setBackgroundRole(QPalette::Dark);
-    m_pageEdit.reset(new PageEditForm(ui.scrollAreaPages));
-    ui.scrollAreaPages->setWidget(m_pageEdit.get());
+    m_formHolderWidget = new QWidget();
+    m_formHolderWidget->setLayout(new QVBoxLayout());
+    m_formHolderWidget->layout()->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    m_formHolderWidget->layout()->setContentsMargins(1, 1, 1, 1);
+    ui.scrollAreaPages->setWidget(m_formHolderWidget);
+    m_formHolderWidget->layout()->addWidget(new PageEditForm());
     ui.scrollAreaPages->setBackgroundRole(QPalette::Dark);
     ui.topToolBar->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui.leftToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleLeftToolBarAction);
     connect(ui.topToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleTopToolBarAction);
     connect(ui.topToolBar, &QWidget::customContextMenuRequested, this, &DigitalComicReader::handleTopTBContextMenu);
-    connect(m_pageWidget.get(), &PageDisplayWidget::toggleDrawing, this, &DigitalComicReader::toggleDrawingTBButton);
+    connect(m_pageWidget, &PageDisplayWidget::toggleDrawing, this, &DigitalComicReader::toggleDrawingTBButton);
     connect(ui.newPageBtn, &QPushButton::clicked, this, &DigitalComicReader::createNewPage);
 }
 
@@ -130,5 +134,5 @@ void DigitalComicReader::toggleDrawingTBButton()
 
 void DigitalComicReader::createNewPage()
 {
-    return;
+    m_formHolderWidget->layout()->addWidget(new PageEditForm());
 }

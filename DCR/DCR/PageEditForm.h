@@ -22,7 +22,7 @@ class PageEditForm : public QWidget
 	};
 
 public:
-	PageEditForm(QWidget* parent, Qt::WindowFlags f = Qt::WindowFlags());
+	PageEditForm();
 	~PageEditForm();
 
 public slots:
