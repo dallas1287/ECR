@@ -1,10 +1,11 @@
 #include "DrawHandler.h"
+#include "PageDisplayWidget.h"
 
 DrawHandler::DrawHandler()
 {
 }
 
-DrawHandler::DrawHandler(QPaintDevice* device) : m_device(device)
+DrawHandler::DrawHandler(QWidget* owner) : m_owner(owner)
 {
 }
 
@@ -21,14 +22,25 @@ DrawHandler& DrawHandler::operator=(const DrawHandler& other)
 	return *this;
 }
 
-void DrawHandler::draw(DrawType mode, const QRect& rect)
+void DrawHandler::drawPage(ComicPage& page)
 {
-	if (!m_painter.begin(m_device))
+	if (!m_painter.isActive() && !m_painter.begin(m_owner))
 	{
 		qDebug() << "Painter failed to begin";
 		return;
 	}
 
+	drawBackground(page.pageSize());
+	//draw current
+	draw(page.getPanelHandler().getCurrentShapeType(), page.getPanelHandler().getCurrentShape());
+	//draw existing
+	draw(page.getPanelHandler().panelObjects());
+
+	m_painter.end();
+}
+
+void DrawHandler::draw(DrawType mode, const QRect& rect)
+{
 	m_painter.setRenderHint(QPainter::Antialiasing, true);
 	m_penSettings.setupPen(m_pen);
 	m_painter.setPen(m_pen);
@@ -51,19 +63,15 @@ void DrawHandler::draw(DrawType mode, const QRect& rect)
 		default:
 			break;
 	}
-
-	m_painter.end();
-}
-
-void DrawHandler::draw(const QRect& rect)
-{
-	draw(m_mode, rect);
 }
 
 void DrawHandler::draw(PanelObjectPool& pObjs)
 {
 	for (auto& p : pObjs)
-		draw(p->getDrawMode(), p->getRect());
+	{
+		if(!p->getGraphicPanel())
+			draw(p->getDrawMode(), p->getRect());
+	}
 }
 
 void DrawHandler::drawPolygon()
@@ -97,7 +105,6 @@ void DrawHandler::drawEllipse(const QRect& rect)
 
 void DrawHandler::drawBackground(const QSize& pageSize)
 {
-	m_painter.begin(m_device);
 	QPen pen;
 	pen.setColor(QColor(0, 0, 0));
 	pen.setWidth(3);
@@ -106,7 +113,6 @@ void DrawHandler::drawBackground(const QSize& pageSize)
     QBrush brush(QColor(255, 255, 255)); //fill white background
     m_painter.fillRect(r, brush);
     m_painter.drawRect(r);
-	m_painter.end();
 }
 
 void DrawHandler::drawSelected(PanelObject* selected)

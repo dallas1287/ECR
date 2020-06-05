@@ -5,13 +5,13 @@
 #include "common.h"
 
 
-GraphicPanel::GraphicPanel(QWidget* parent, PanelObject* controller, const QString& filePath, Qt::WindowFlags flags) : QOpenGLWidget(parent), m_controller(controller), m_filePath(filePath)
+GraphicPanel::GraphicPanel(PanelObject* controller, const QString& filePath, Qt::WindowFlags flags) : QOpenGLWidget(), m_controller(controller), m_filePath(filePath)
 {
 	setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 	setFocus(Qt::FocusReason::OtherFocusReason);
 }
 
-GraphicPanel::GraphicPanel(const GraphicPanel& other): GraphicPanel(other.parentWidget(), other.m_controller, other.m_filePath, other.windowFlags())
+GraphicPanel::GraphicPanel(const GraphicPanel& other): GraphicPanel(other.m_controller, other.m_filePath, other.windowFlags())
 {
 	m_gObj.reset(new GraphicsObject(*(other.m_gObj.get())));
 }
@@ -23,7 +23,6 @@ GraphicPanel::~GraphicPanel()
 GraphicPanel& GraphicPanel::operator=(const GraphicPanel& other)
 {
 	m_controller = other.m_controller;
-	setParent(other.parentWidget());
 	m_gObj.reset(new GraphicsObject());
 	return *this;
 }

@@ -12,18 +12,16 @@ class DigitalComicReader : public QMainWindow
 public:
     DigitalComicReader(QWidget *parent = Q_NULLPTR);
 	~DigitalComicReader();
+	DrawType getDrawType();
 
 public slots:
-	void handleToolBarAction(QAction* action);
+	void handleTopToolBarAction(QAction* action);
+	void handleLeftToolBarAction(QAction* action);
 	void handleTopTBContextMenu(const QPoint& pos);
 	void onCreateGridCtxMenu();
-
-protected:
-	virtual void keyPressEvent(QKeyEvent* event) override;
+	void toggleDrawingTBButton();
 
 private:
-	void handleTopToolBarAction(TopToolBar selection);
-	void handleLeftToolBarAction(LeftToolBar selection);
 	void handleGridCreation();
 
     Ui::DigitalComicReaderClass ui;

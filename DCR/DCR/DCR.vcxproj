@@ -110,6 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComicPage.cpp" />
     <ClCompile Include="PageDisplayWidget.cpp" />
     <ClCompile Include="ComicPanelHandler.cpp" />
     <ClCompile Include="DrawHandler.cpp" />
@@ -128,6 +129,7 @@
     <QtMoc Include="GraphicPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComicPage.h" />
     <ClInclude Include="PageEditForm.h" />
     <ClInclude Include="ToolbarMaps.h" />
     <QtMoc Include="ComicPanelHandler.h" />

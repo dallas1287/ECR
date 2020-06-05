@@ -1,8 +1,7 @@
 #pragma once
 #include <QPainter>
 #include "ToolbarMaps.h"
-#include "PanelObject.h"
-#include "ComicPanelHandler.h"
+#include "ComicPage.h"
 
 const QBrush TransparentBrush = QBrush(QColor(0, 0, 0, 0));
 
@@ -36,19 +35,18 @@ class DrawHandler
 {
 public:
 	DrawHandler();
-	DrawHandler(QPaintDevice* device);
+	DrawHandler(QWidget* owner);
 	DrawHandler(const DrawHandler& other);
 
 	~DrawHandler();
 
 	DrawHandler& operator=(const DrawHandler& other);
 
-	void setPanelHandler(ComicPanelHandler* handler) { m_panelHandler = handler; }
+	void drawPage(ComicPage& page);
 
-	DrawType getDrawMode() { return m_mode; }
-	void setDrawMode(DrawType mode) { m_mode = mode; }
+	void addPoint(const QPoint& point) { m_points.push_back(point); }
 
-	void draw(const QRect& rect = QRect());
+private:
 	void draw(DrawType mode, const QRect& rect = QRect());
 	void draw(PanelObjectPool& pObjs);
 	void drawPolygon();
@@ -58,16 +56,11 @@ public:
 	void drawBackground(const QSize& pageSize);
 	void drawSelected(PanelObject* selected);
 
-	void addPoint(const QPoint& point) { m_points.push_back(point); }
-
-private:
-	QPaintDevice* m_device;
-	ComicPanelHandler* m_panelHandler = nullptr;
+	QWidget* m_owner = nullptr;
 	QPainter m_painter;
 	QPen m_pen;
 	QBrush m_bgBrush = QBrush(Qt::white);
 	PenSettings m_penSettings;
 	PenSettings m_bgSettings;
 	std::vector<QPoint> m_points;
-	DrawType m_mode = DrawType::Rectangle;
 };

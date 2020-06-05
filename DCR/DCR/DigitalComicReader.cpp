@@ -12,68 +12,66 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
     ui.scrollAreaPages->setWidget(m_pageEdit.get());
     ui.scrollAreaPages->setBackgroundRole(QPalette::Dark);
     ui.topToolBar->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui.leftToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
-    connect(ui.topToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleToolBarAction);
+    connect(ui.leftToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleLeftToolBarAction);
+    connect(ui.topToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleTopToolBarAction);
     connect(ui.topToolBar, &QWidget::customContextMenuRequested, this, &DigitalComicReader::handleTopTBContextMenu);
+    connect(m_pageWidget.get(), &PageDisplayWidget::toggleDrawing, this, &DigitalComicReader::toggleDrawingTBButton);
 }
 
 DigitalComicReader::~DigitalComicReader()
 {
 }
 
+DrawType DigitalComicReader::getDrawType()
+{
+    for (DrawType type = DrawType::Polygon; type <= DrawType::Ellipse; type = ++type)
+    {
+        if (ui.leftToolBar->actions()[(unsigned int)type]->isChecked())
+            return type;
+    }
+    return DrawType::OutOfRange;
+}
+
 /**************************************************************************************************
 **************************Toolbar Events***********************************************************
 **************************************************************************************************/
 
-void DigitalComicReader::handleToolBarAction(QAction* action)
+void DigitalComicReader::handleTopToolBarAction(QAction* action)
 {
-    if (!action)
-        return;
-
-    auto topTB = TopTBMap.find(action->text());
-    if (topTB != TopTBMap.end())
+    auto selection = TopTBMap.find(action->text());
+    switch (selection->second)
     {
-        handleTopToolBarAction(topTB->second);
-        return;
-    }
-
-    auto leftTB = LeftTBMap.find(action->text());
-    if (leftTB != LeftTBMap.end())
-    {
-        handleLeftToolBarAction(leftTB->second);
-        return;
+    case TopToolBar::Drawing:
+        emit m_pageWidget->toggleDrawing();
+        break;
+    case TopToolBar::CreateGrid:
+        handleGridCreation();
+        break;
+    default:
+        break;
     }
 }
 
-void DigitalComicReader::handleTopToolBarAction(TopToolBar selection)
+void DigitalComicReader::handleLeftToolBarAction(QAction* action)
 {
-    switch (selection)
+    auto selection = LeftTBMap.find(action->text());
+    switch (selection->second)
     {
-        case TopToolBar::Drawing:
-            m_pageWidget->setDrawing(m_pageWidget->isDrawing() ^ true);
-            break;
-        case TopToolBar::CreateGrid:
-            handleGridCreation();
-            break;
-        default:
-            return;
-    }
-}
+        case LeftToolBar::Polygon:
+        case LeftToolBar::Rectangle:
+        case LeftToolBar::Circle:
+        case LeftToolBar::Ellipse:
+        {  //clear all actions checked first
+            for (auto a : ui.leftToolBar->actions())
+                a->setChecked(false);
 
-void DigitalComicReader::handleLeftToolBarAction(LeftToolBar selection)
-{
-    if (selection >= LeftToolBar::Polygon && selection <= LeftToolBar::Ellipse)
-    {
-        //clear all actions checked first
-        for (auto a : ui.leftToolBar->actions())
-            a->setChecked(false);
-
-        QAction* selected = ui.leftToolBar->actions()[(int)selection];
-        if (selected)
-        {
-            selected->setChecked(selected->isChecked() ^ true);
-            m_pageWidget->setDrawMode(selection);
+            QAction* selected = ui.leftToolBar->actions()[(unsigned int)selection->second];
+            if (selected)
+                selected->setChecked(selected->isChecked() ^ true);
+            break;
         }
+        default:
+            break;
     }
 }
 
@@ -115,20 +113,16 @@ void DigitalComicReader::handleGridCreation()
     int vPadding = ui.lineEditPPV->text().toInt();
     int hBorder = ui.lineEditBorderH->text().toInt();
     int vBorder = ui.lineEditBorderV->text().toInt();
-    m_pageWidget->createGrid(numH, numV, hPadding, vPadding, hBorder, vBorder);
+    m_pageWidget->getComicPage().createGrid(numH, numV, hPadding, vPadding, hBorder, vBorder);
 }
 
 /**************************************************************************************************
-**************************Keyboard Events**********************************************************
+**************************Slots********************************************************************
 **************************************************************************************************/
 
-void DigitalComicReader::keyPressEvent(QKeyEvent* event)
+void DigitalComicReader::toggleDrawingTBButton()
 {
-    if (event->key() == Qt::Key_Space)
-    {
-        m_pageWidget->setDrawing(m_pageWidget->isDrawing() ^ true);
-        QAction* a = ui.topToolBar->actions()[(int)TopToolBar::Drawing];
-        if(a)
-            a->setChecked(a->isChecked() ^ true);
-    }
+    QAction* a = ui.topToolBar->actions()[(int)TopToolBar::Drawing];
+    if(a)
+        a->setChecked(a->isChecked() ^ true);
 }
