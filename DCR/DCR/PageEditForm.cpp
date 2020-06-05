@@ -3,7 +3,7 @@
 PageEditForm::PageEditForm(QWidget* parent, Qt::WindowFlags f) : QWidget(parent, f)
 {
 	//create header and layout
-	m_button.reset(new QPushButton("V"));
+	m_button.reset(new QPushButton("v"));
 	m_button->setCheckable(true);
 	m_button->setChecked(true);
 	m_button->setFixedWidth(25);
@@ -62,4 +62,5 @@ void PageEditForm::addWidgets()
 void PageEditForm::onCollapseClicked(bool checked)
 {
 	m_formWidget->setVisible(checked);
+	m_button->setText(checked ? "v" : ">");
 }

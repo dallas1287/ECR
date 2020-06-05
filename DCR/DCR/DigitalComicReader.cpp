@@ -16,6 +16,7 @@ DigitalComicReader::DigitalComicReader(QWidget *parent)
     connect(ui.topToolBar, &QToolBar::actionTriggered, this, &DigitalComicReader::handleTopToolBarAction);
     connect(ui.topToolBar, &QWidget::customContextMenuRequested, this, &DigitalComicReader::handleTopTBContextMenu);
     connect(m_pageWidget.get(), &PageDisplayWidget::toggleDrawing, this, &DigitalComicReader::toggleDrawingTBButton);
+    connect(ui.newPageBtn, &QPushButton::clicked, this, &DigitalComicReader::createNewPage);
 }
 
 DigitalComicReader::~DigitalComicReader()
@@ -125,4 +126,9 @@ void DigitalComicReader::toggleDrawingTBButton()
     QAction* a = ui.topToolBar->actions()[(int)TopToolBar::Drawing];
     if(a)
         a->setChecked(a->isChecked() ^ true);
+}
+
+void DigitalComicReader::createNewPage()
+{
+    return;
 }

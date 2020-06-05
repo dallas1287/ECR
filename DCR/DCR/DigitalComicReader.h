@@ -20,6 +20,7 @@ public slots:
 	void handleTopTBContextMenu(const QPoint& pos);
 	void onCreateGridCtxMenu();
 	void toggleDrawingTBButton();
+	void createNewPage();
 
 private:
 	void handleGridCreation();
